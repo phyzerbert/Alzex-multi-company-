@@ -30,6 +30,14 @@
                     <div class="form-search">
                         <form action="" class="form-inline" method="post">
                             @csrf
+                            @if (Auth::user()->hasRole('admin'))
+                                <select class="form-control form-control-sm mr-sm-2" name="company_id" id="search_company">
+                                    <option value="" hidden>{{__('page.select_company')}}</option>
+                                    @foreach ($companies as $item)
+                                        <option value="{{$item->id}}" data-icon="wallet" @if($company_id == $item->id) selected @endif>{{$item->name}}</option>                                            
+                                    @endforeach     
+                                </select>
+                            @endif
                             <div class="input-group">
                                 <span class="input-group-prepend">
                                     <span class="input-group-text"><i class="icon-calendar"></i></span>
@@ -53,8 +61,6 @@
                     use Carbon\Carbon;
 
                     $now = Carbon::now();
-                    $mod1 = new \App\Models\Transaction;
-                    $mod2 = new \App\Models\Transaction;
 
                     if($from != '' && $to != ''){
                         $chart_start = Carbon::createFromFormat('Y-m-d', $from);
@@ -70,8 +76,9 @@
                         $key = $dt->format('Y-m-d');
                         $key1 = $dt->format('M/d');
                         array_push($key_array, $key1);
-                        $daily_expense = $mod1->where('type', 1)->whereDate('timestamp', $key)->sum('amount');
-                        $daily_incoming = $mod2->where('type', 2)->whereDate('timestamp', $key)->sum('amount');
+                        $daily_expense = $company->transactions()->where('type', 1)->whereDate('timestamp', $key)->sum('amount');
+                        $daily_incoming = $company->transactions()->where('type', 2)->whereDate('timestamp', $key)->sum('amount');
+                        
                         array_push($expense_array, $daily_expense);
                         array_push($incoming_array, $daily_incoming);
                     }
@@ -131,8 +138,8 @@
                     for ($i=0; $i < count($search_categories); $i++) { 
                         $item = \App\Models\Category::find($search_categories[$i]);
                         array_push($category_key_array, $item->name);
-                        $category_expense = $item->transactions()->where('type', 1)->whereBetween('timestamp', [$from, $to])->sum('amount');
-                        $category_incoming = $item->transactions()->where('type', 2)->whereBetween('timestamp', [$from, $to])->sum('amount');
+                        $category_expense = $item->transactions()->where('company_id', $company_id)->where('type', 1)->whereBetween('timestamp', [$from, $to])->sum('amount');
+                        $category_incoming = $item->transactions()->where('company_id', $company_id)->where('type', 2)->whereBetween('timestamp', [$from, $to])->sum('amount');
                         array_push($category_expense_array, $category_expense);
                         array_push($category_incoming_array, $category_incoming);
                     }

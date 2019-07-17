@@ -39,6 +39,11 @@ hs.src = ('//s10.histats.com/js15_as.js');
         <span class="badge bg-success ml-md-3 mr-md-auto">{{__('page.online')}}</span>
 
         <ul class="navbar-nav">
+            @if(Auth::user()->hasRole('user'))
+                <div class="nav-item">
+                    <span class="text-success" style="font-size:25px;line-height:46px;">@isset(Auth::user()->company->name){{Auth::user()->company->name}}@endisset</span>
+                </div>                
+            @endif
             <li class="nav-item dropdown dropdown-user">
                 @php $locale = session()->get('locale'); @endphp
                 <a href="#" class="navbar-nav-link d-flex align-items-center dropdown-toggle" style="margin-top:8px;" data-toggle="dropdown">                    
