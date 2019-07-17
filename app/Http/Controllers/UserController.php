@@ -78,6 +78,10 @@ class UserController extends Controller
             'password' => 'confirmed',
         ]);
         $user = User::find($request->get("id"));
+        
+        if($user->role_id == 2 && $request->get('company') == ""){
+            return back()->withErrors(['company' => 'Company field is required.']);
+        }
         $user->name = $request->get("name");
         $user->company_id = $request->get("company");
         $user->phone_number = $request->get("phone");
@@ -97,6 +101,9 @@ class UserController extends Controller
             'role'=>'required',
             'password'=>'required|string|min:6|confirmed'
         ]);
+        if($request->get('role') == 2 && $request->get('company') == ""){
+            return back()->withErrors(['company' => 'Company field is required.']);
+        }
         
         User::create([
             'name' => $request->get('name'),
