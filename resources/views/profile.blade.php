@@ -121,7 +121,7 @@
 
                                     <div class="form-group">
                                         <label>{{__('page.confirm_password')}}</label>
-                                        <input type="password" name="password_conform" placeholder="{{__('page.confirm_password')}}" class="form-control">
+                                        <input type="password" name="password_confirmation" placeholder="{{__('page.confirm_password')}}" class="form-control">
                                     </div>
 
                                     <div class="text-right">
