@@ -102,7 +102,7 @@
                         <div class="form-group">
                             <label class="control-label">{{__('page.company')}}</label>
                             <select class="form-control" name="company" required>
-                                <option value="" hidden>Select a company</option>
+                                <option value="">Select a company</option>
                                 @foreach ($companies as $item)
                                     <option value="{{$item->id}}">{{$item->name}}</option>                                    
                                 @endforeach
@@ -172,12 +172,12 @@
                         <div class="form-group">
                             <label class="control-label">{{__('page.company')}}</label>
                             <select class="form-control" name="company" required>
-                                <option value="" hidden>Select a company</option>
+                                <option value="">Select a company</option>
                                 @foreach ($companies as $item)
                                     <option value="{{$item->id}}">{{$item->name}}</option>                                    
                                 @endforeach
                             </select>
-                            <span id="company_error" class="invalid-feedback">
+                            <span id="edit_company_error" class="invalid-feedback">
                                 <strong></strong>
                             </span>
                         </div>
@@ -316,8 +316,8 @@
                         }
 
                         if(messages.company) {
-                            $('#company_error strong').text(data.responseJSON.errors.company[0]);
-                            $('#company_error').show();
+                            $('#edit_company_error strong').text(data.responseJSON.errors.company[0]);
+                            $('#edit_company_error').show();
                             $('#edit_form .company').focus();
                         }
 
