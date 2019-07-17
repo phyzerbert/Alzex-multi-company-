@@ -59,7 +59,6 @@
                                 <div class="form-group">
                                     <label>{{__('page.withdraw_from')}}:</label>
                                     <select data-placeholder="{{__('page.withdraw_from')}}" name="account" class="form-control form-control-select2-icons" data-fouc>
-                                        <option label="{{__('page.withdraw_from')}}"></option>
                                         @foreach ($accounts as $account)
                                             <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
                                         @endforeach                               
@@ -123,7 +122,6 @@
                                 <div class="form-group">
                                     <label>{{__('page.target_account')}}:</label>
                                     <select data-placeholder="{{__('page.target_account')}}" name="account" class="form-control form-control-select2-icons" data-fouc>
-                                        <option label="{{__('page.target_account')}}"></option>
                                         @foreach ($accounts as $account)
                                             <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
                                         @endforeach                             
@@ -183,8 +181,7 @@
 
                                 <div class="form-group">
                                     <label>{{__('page.withdraw_from')}}:</label>
-                                    <select data-placeholder="{{__('page.withdraw_from')}}" name="account" class="form-control form-control-select2-icons" data-fouc>
-                                        <option label="{{__('page.withdraw_from')}}"></option>
+                                    <select data-placeholder="{{__('page.withdraw_from')}}" name="account" class="form-control form-control-select2-icons" data-fouc>                                        
                                         @foreach ($accounts as $account)
                                             <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
                                         @endforeach                               
@@ -197,7 +194,6 @@
                                 <div class="form-group">
                                     <label>{{__('page.target_account')}}:</label>
                                     <select data-placeholder="{{__('page.target_account')}}" name="target" class="form-control form-control-select2-icons" data-fouc>
-                                        <option label="{{__('page.target_account')}}"></option>
                                         @foreach ($accounts as $account)
                                             <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
                                         @endforeach                              
