@@ -44,20 +44,9 @@
                             <form action="{{route('transaction.expense')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
-                                    <label>{{__('page.user')}}:</label>
-                                    <select data-placeholder="Select user" name="user" class="form-control form-control-select2" data-fouc>
-                                        @foreach ($users as $user)
-                                            <option value={{$user->id}}>{{$user->name}}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('user')
-                                        <span class="form-text text-success">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
                                     <label>{{__('page.category')}}:</label>
-                                    <select data-placeholder="Select category" name="category" class="form-control form-control-select2" data-fouc>
+                                    <select data-placeholder="{{__('page.select_category')}}" name="category" class="form-control form-control-select2" data-fouc>
+                                        <option label="{{__('page.select_category')}}"></option>
                                         @foreach ($categories as $category)
                                             <option value={{$category->id}}>{{$category->name}}</option>
                                         @endforeach
@@ -70,13 +59,10 @@
                                 <div class="form-group">
                                     <label>{{__('page.withdraw_from')}}:</label>
                                     <select data-placeholder="{{__('page.withdraw_from')}}" name="account" class="form-control form-control-select2-icons" data-fouc>
-                                        @foreach ($accountgroups as $accountgroup)
-                                            <optgroup label="{{$accountgroup->name}}">
-                                                @foreach ($accountgroup->accounts as $account)
-                                                    <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
-                                                @endforeach
-                                            </optgroup>
-                                        @endforeach                                
+                                        <option label="{{__('page.withdraw_from')}}"></option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
+                                        @endforeach                               
                                     </select>
                                     @error('account')
                                         <span class="form-text text-success">{{ $message }}</span>
@@ -122,20 +108,9 @@
                             <form action="{{route('transaction.incoming')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
-                                    <label>{{__('page.user')}}:</label>
-                                    <select data-placeholder="Select user" name="user" class="form-control form-control-select2" data-fouc>
-                                        @foreach ($users as $user)
-                                            <option value={{$user->id}}>{{$user->name}}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('user')
-                                        <span class="form-text text-success">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
                                     <label>{{__('page.category')}}:</label>
-                                    <select data-placeholder="Select category" name="category" class="form-control form-control-select2" data-fouc>
+                                    <select data-placeholder="{{__('page.select_category')}}" name="category" class="form-control form-control-select2" data-fouc>
+                                        <option label="{{__('page.select_category')}}"></option>
                                         @foreach ($categories as $category)
                                             <option value={{$category->id}}>{{$category->name}}</option>
                                         @endforeach
@@ -147,14 +122,11 @@
 
                                 <div class="form-group">
                                     <label>{{__('page.target_account')}}:</label>
-                                    <select data-placeholder="Target From" name="account" class="form-control form-control-select2-icons" data-fouc>
-                                        @foreach ($accountgroups as $accountgroup)
-                                            <optgroup label="{{$accountgroup->name}}">
-                                                @foreach ($accountgroup->accounts as $account)
-                                                    <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
-                                                @endforeach
-                                            </optgroup>
-                                        @endforeach                                
+                                    <select data-placeholder="{{__('page.target_account')}}" name="account" class="form-control form-control-select2-icons" data-fouc>
+                                        <option label="{{__('page.target_account')}}"></option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
+                                        @endforeach                             
                                     </select>
                                     @error('account')
                                         <span class="form-text text-success">{{ $message }}</span>
@@ -173,7 +145,7 @@
 
                                 <div class="form-group">
                                     <label>{{__('page.amount')}}:</label>
-                                    <input type="text" name="amount" class="form-control" placeholder="{{__('page.amount')}}">
+                                    <input type="text" name="amount" class="form-control" required placeholder="{{__('page.amount')}}">
                                 </div>
 
                                 <div class="form-group">
@@ -196,22 +168,10 @@
                         <div class="tab-pane fade" id="transfer">                            
                             <form action="{{route('transaction.transfer')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                <input type="hidden" name="type" value="1">
-                                <div class="form-group">
-                                    <label>{{__('page.user')}}:</label>
-                                    <select data-placeholder="Select user" name="user" class="form-control form-control-select2" data-fouc>
-                                        @foreach ($users as $user)
-                                            <option value={{$user->id}}>{{$user->name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('user')
-                                    <span class="form-text text-success">{{ $message }}</span>
-                                @enderror
-
                                 <div class="form-group">
                                     <label>{{__('page.category')}}:</label>
-                                    <select data-placeholder="Select category" name="category" class="form-control form-control-select2" data-fouc>
+                                    <select data-placeholder="{{__('page.select_category')}}" name="category" class="form-control form-control-select2" data-fouc>
+                                        <option label="{{__('page.select_category')}}"></option>
                                         @foreach ($categories as $category)
                                             <option value={{$category->id}}>{{$category->name}}</option>
                                         @endforeach
@@ -224,13 +184,10 @@
                                 <div class="form-group">
                                     <label>{{__('page.withdraw_from')}}:</label>
                                     <select data-placeholder="{{__('page.withdraw_from')}}" name="account" class="form-control form-control-select2-icons" data-fouc>
-                                        @foreach ($accountgroups as $accountgroup)
-                                            <optgroup label="{{$accountgroup->name}}">
-                                                @foreach ($accountgroup->accounts as $account)
-                                                    <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
-                                                @endforeach
-                                            </optgroup>
-                                        @endforeach                                
+                                        <option label="{{__('page.withdraw_from')}}"></option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
+                                        @endforeach                               
                                     </select>
                                     @error('account')
                                         <span class="form-text text-success">{{ $message }}</span>
@@ -240,13 +197,10 @@
                                 <div class="form-group">
                                     <label>{{__('page.target_account')}}:</label>
                                     <select data-placeholder="{{__('page.target_account')}}" name="target" class="form-control form-control-select2-icons" data-fouc>
-                                        @foreach ($accountgroups as $accountgroup)
-                                            <optgroup label="{{$accountgroup->name}}">
-                                                @foreach ($accountgroup->accounts as $account)
-                                                    <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
-                                                @endforeach
-                                            </optgroup>
-                                        @endforeach                                
+                                        <option label="{{__('page.target_account')}}"></option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
+                                        @endforeach                              
                                     </select>
                                     @error('target')
                                         <span class="form-text text-success">{{ $message }}</span>
@@ -307,6 +261,7 @@
 	<script src="{{asset('master/global_assets/js/plugins/pickers/pickadate/picker.time.js')}}"></script>
 	<script src="{{asset('master/global_assets/js/plugins/pickers/pickadate/legacy.js')}}"></script>
 	<script src="{{asset('master/global_assets/js/plugins/notifications/jgrowl.min.js')}}"></script>
+	{{-- <script src="{{asset('master/global_assets/js/plugins/number/jquery.number.min.js')}}"></script> --}}
     <script>
         $(document).ready(function () {
             $('input.pickadate').daterangepicker({ 
@@ -314,8 +269,8 @@
                 locale: {
                     format: 'YYYY-MM-DD'
                 }
-            });
-            
+            });  
+            // $("input[name='amount']").number(true)          
         });
     </script>
     

@@ -9,6 +9,8 @@ use App\Models\Category;
 use App\Models\Company;
 use App\Models\Account;
 
+use Auth;
+
 class TransactionController extends Controller
 {
     /**
@@ -29,18 +31,34 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         config(['site.page' => 'transaction']);
+        $user = Auth::user();
         $categories = Category::all();
-        $companies = Company::all();
         $users = User::all();
+        $companies = Company::all();
+        $accounts = Account::all();
         
         $mod = new Transaction();
         $mod1 = new Transaction();
         $category = $company_id = $account = $description = $type = $period = '';
 
+        if($user->hasRole('user')){
+            $company = $user->company;
+            $company_id = $company->id;
+            $accounts = $company->accounts;
+            $users = $company->users;
+            $mod = $company->transactions();
+            $mod1 = $company->transactions();
+        }
+
         if ($request->get('type') != ""){
             $type = $request->get('type');
             $mod = $mod->where('type', $type);
             $mod1 = $mod1->where('type', $type);
+        }
+        if ($request->get('company_id') != ""){
+            $company_id = $request->get('company_id');
+            $mod = $mod->where('company_id', $company_id);
+            $mod1 = $mod1->where('company_id', $company_id);
         }
         if ($request->get('description') != ""){
             $description = $request->get('description');
@@ -72,25 +90,33 @@ class TransactionController extends Controller
         }
 
         $pagesize = $request->session()->get('pagesize');
-        if(!$pagesize){$pagesize = 15;}
         $data = $mod->orderBy('timestamp', 'desc')->paginate($pagesize);
         $expenses = $mod->where('type', 1)->sum('amount');
         $incomes = $mod1->where('type', 2)->sum('amount');
-        return view('transaction.index', compact('data', 'companies', 'expenses', 'incomes', 'categories', 'accountgroups', 'users', 'type', 'description', 'category', 'account', 'period', 'pagesize'));
+        return view('transaction.index', compact('data', 'companies', 'expenses', 'incomes', 'categories', 'accounts', 'users', 'type', 'company_id', 'description', 'category', 'account', 'period', 'pagesize'));
     }
 
     public function daily(Request $request)
     {
         config(['site.page' => 'transaction_daily']);
+        $user = Auth::user();
         $categories = Category::all();
-        $accountgroups = Accountgroup::all();
+        $accounts = Account::all();
         $users = User::all();
         
         $mod = new Transaction();
         $mod1 = new Transaction();
-        $category = $account = $description = $type = $period = $change_date = '';
-        
         $last_transaction = Transaction::orderBy('timestamp', 'desc')->first();
+        $category = $account = $description = $type = $period = $change_date = '';
+        if($user->hasRole('user')){
+            $company = $user->company;
+            $company_id = $company->id;
+            $accounts = $company->accounts;
+            $users = $company->users;
+            $mod = $company->transactions();
+            $mod1 = $company->transactions();
+            $last_transaction = $company->transactions()->orderBy('timestamp', 'desc')->first();
+        }
         if(isset($last_transaction)){
             $period = date('Y-m-d', strtotime($last_transaction->timestamp));
         }else{
@@ -144,23 +170,25 @@ class TransactionController extends Controller
         $data = $mod->orderBy('created_at', 'desc')->paginate($pagesize);
         $expenses = $mod->where('type', 1)->sum('amount');
         $incomes = $mod1->where('type', 2)->sum('amount');
-        return view('transaction.daily', compact('data', 'expenses', 'incomes', 'categories', 'accountgroups', 'users', 'type', 'description', 'category', 'account', 'period', 'pagesize'));
+        return view('transaction.daily', compact('data', 'expenses', 'incomes', 'categories', 'accounts', 'users', 'type', 'description', 'category', 'account', 'period', 'pagesize'));
     }
 
     public function create(Request $request){
-        $users = User::all();
-        $categories = Category::all();
-        $companies = Company::all();        
-        return view('transaction.create', compact('users', 'companies', 'categories', 'accountgroups'));
+        $user = Auth::user();
+        $categories = Category::all();  
+        $company = $user->company;
+        $accounts = $company->accounts;
+        return view('transaction.create', compact('users', 'company', 'categories', 'accounts'));
     }
 
     public function expense(Request $request){
         $request->validate([
-            'user'=>'required',
             'category'=>'required',
             'account'=>'required',
             'amount'=>'required|numeric',
+            'timestamp'=>'required',
         ]);
+        $user = Auth::user();
         $account = Account::find($request->get('account'));
         // if ($account->balance < $request->get('amount')) {
         //     return back()->withErrors(['insufficent' => 'Insufficent balance.']);
@@ -175,8 +203,8 @@ class TransactionController extends Controller
 
         Transaction::create([
             'type' => 1,
-            'user_id' => $request->get('user'),
-            'company_id' => $account->company_id,
+            'user_id' => $user->id,
+            'company_id' => $user->company_id,
             'category_id' => $request->get('category'),
             'from' => $request->get('account'),
             'amount' => $request->get('amount'),
@@ -191,12 +219,12 @@ class TransactionController extends Controller
 
     public function incoming(Request $request){
         $request->validate([
-            'user'=>'required',
             'category'=>'required',
             'account'=>'required',
             'amount'=>'required|numeric',
+            'timestamp'=>'required',
         ]);
-        
+        $user = Auth::user();        
         $attachment = '';
         if($request->file('attachment') != null){
             $image = request()->file('attachment');
@@ -208,8 +236,8 @@ class TransactionController extends Controller
 
         Transaction::create([
             'type' => 2,
-            'user_id' => $request->get('user'),
-            'company_id' => $account->company_id,
+            'user_id' => $user->id,
+            'company_id' => $user->company_id,
             'category_id' => $request->get('category'),
             'to' => $request->get('account'),
             'amount' => $request->get('amount'),
@@ -224,12 +252,12 @@ class TransactionController extends Controller
 
     public function transfer(Request $request){
         $request->validate([
-            'user'=>'required',
             'account'=>'required',
             'target'=>'required',
             'amount'=>'required|numeric',
+            'timestamp'=>'required',
         ]);
-
+        $user = Auth::user();
         $account = Account::find($request->get('account'));
         $target = Account::find($request->get('target'));
 
@@ -247,8 +275,8 @@ class TransactionController extends Controller
 
         Transaction::create([
             'type' => 3,
-            'user_id' => $request->get('user'),
-            'company_id' => $account->company_id,
+            'user_id' => $user->id,
+            'company_id' => $user->company_id,
             'category_id' => $request->get('category'),
             'from' => $request->get('account'),
             'to' => $request->get('target'),

@@ -37,23 +37,23 @@ Route::post('/category/create', 'CategoryController@create')->name('category.cre
 Route::post('/category/edit', 'CategoryController@edit')->name('category.edit');
 Route::get('/category/delete/{id}', 'CategoryController@delete')->name('category.delete');
 
+Route::get('/company/index', 'CompanyController@index')->name('company.index');
+Route::post('/company/create', 'CompanyController@create')->name('company.create');
+Route::post('/company/edit', 'CompanyController@edit')->name('company.edit');
+Route::get('/company/delete/{id}', 'CompanyController@delete')->name('company.delete');
+
 
 Route::get('/account/index', 'AccountController@index')->name('account.index');
 Route::post('/account/create', 'AccountController@create')->name('account.create');
 Route::post('/account/edit', 'AccountController@edit')->name('account.edit');
 Route::get('/account/delete/{id}', 'AccountController@delete')->name('account.delete');
 
-Route::post('/accountgroup/create', 'AccountController@create_group')->name('accountgroup.create');
-Route::post('/accountgroup/edit', 'AccountController@edit_group')->name('accountgroup.edit');
-Route::get('/accountgroup/delete/{id}', 'AccountController@delete_group')->name('accountgroup.delete');
-
-
 Route::any('/transaction/index', 'TransactionController@index')->name('transaction.index');
 Route::any('/transaction/daily', 'TransactionController@daily')->name('transaction.daily');
-Route::get('/transaction/create', 'TransactionController@create')->name('transaction.create');
-Route::post('/transaction/expense', 'TransactionController@expense')->name('transaction.expense');
-Route::post('/transaction/incoming', 'TransactionController@incoming')->name('transaction.incoming');
-Route::post('/transaction/transfer', 'TransactionController@transfer')->name('transaction.transfer');
+Route::get('/transaction/create', 'TransactionController@create')->name('transaction.create')->middleware('role:user');
+Route::post('/transaction/expense', 'TransactionController@expense')->name('transaction.expense')->middleware('role:user');
+Route::post('/transaction/incoming', 'TransactionController@incoming')->name('transaction.incoming')->middleware('role:user');
+Route::post('/transaction/transfer', 'TransactionController@transfer')->name('transaction.transfer')->middleware('role:user');
 Route::get('/transaction/edit/{id}', 'TransactionController@edit')->name('transaction.edit');
 Route::post('/transaction/update', 'TransactionController@update')->name('transaction.update');
 Route::get('/transaction/delete/{id}', 'TransactionController@delete')->name('transaction.delete');

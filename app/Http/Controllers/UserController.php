@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Company;
+use App\Models\Company;
 use App\User;
 
 use Auth;
@@ -19,6 +19,7 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('role:admin');
     }
 
     /**

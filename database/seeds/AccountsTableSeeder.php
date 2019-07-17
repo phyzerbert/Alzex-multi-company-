@@ -18,7 +18,7 @@ class AccountsTableSeeder extends Seeder
         ]);
 
         Account::create([
-            'name' => 'Account1',
+            'name' => 'Account2',
             'company_id' => 1,
         ]);
 

@@ -23,35 +23,7 @@
                     <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">{{__('page.home')}}</span> - {{__('page.transaction')}}</h4>
                     <a href="index.html#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
                 </div>
-                <div class="header-elements d-flex">
-                    <div class="d-flex justify-content-center">
-                        <div class="btn-group justify-content-center">
-                            <a href="#" class="btn bg-primary-400 dropdown-toggle" data-toggle="dropdown"><i class="icon-wallet"></i>  {{__('page.balance')}}</a>
-                            <div class="dropdown-menu">
-                                @php
-                                    $balance = \App\Models\Account::sum('balance');
-                                @endphp
-                                @foreach ($accountgroups as $accountgroup)
-                                    <div class="dropdown-header dropdown-header-highlight">{{$accountgroup->name}}</div>
-                                    @foreach ($accountgroup->accounts as $item)                                         
-                                        <div class="dropdown-item">
-                                            <div class="flex-grow-1">{{$item->name}}</div>
-                                            <div class="">                                                
-                                                @php
-                                                    $account_expense = $item->expenses()->sum('amount');
-                                                    $account_incoming = $item->incomings()->sum('amount');
-                                                    $account_balance = $account_incoming - $account_expense;
-                                                @endphp
-                                                {{number_format( $account_balance)}}
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                    <div class="dropdown-divider"></div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @include('elements.balance')
             </div>
 
             <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
@@ -78,7 +50,9 @@
                         </select>
                     </form>
                     @include('transaction.filter')
-                    <a href="{{route('transaction.create')}}" class="btn btn-primary btn-sm float-right" id="btn-add"><i class="icon-plus-circle2 mr-2"></i> {{__('page.add_new')}}</a>
+                    @if($role == 'user')
+                        <a href="{{route('transaction.create')}}" class="btn btn-primary btn-sm float-right" id="btn-add"><i class="icon-plus-circle2 mr-2"></i> {{__('page.add_new')}}</a>
+                    @endif
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -87,17 +61,15 @@
                                 <tr class="bg-blue">
                                     <th style="width:30px;">#</th>
                                     <th>{{__('page.date')}}</th>
+                                    <th>{{__('page.company')}}</th>
                                     <th>{{__('page.category')}}</th>
                                     <th>{{__('page.description')}}</th>
                                     <th>{{__('page.amount')}}</th>
-                                    {{-- <th>{{__('page.balance')}}</th> --}}
                                     <th>{{__('page.withdraw_from')}}</th>
                                     <th>{{__('page.target_account')}}</th>
                                     <th>{{__('page.user')}}</th>
                                     <th>{{__('page.type')}}</th>
-                                    @if($role == 'admin')
-                                        <th>{{__('page.action')}}</th>
-                                    @endif
+                                    <th>{{__('page.action')}}</th>
                                 </tr>
                             </thead>
                             <tbody>                                
@@ -105,12 +77,13 @@
                                 @php
                                     $total_expenses = \App\Models\Transaction::where('type', 1)->where('timestamp', '<=', $item->timestamp)->sum('amount');
                                     $total_incoming = \App\Models\Transaction::where('type', 2)->where('timestamp', '<=', $item->timestamp)->sum('amount');
-                                    $current_balance = $balance - $total_incoming + $total_expenses;
+                                    $current_balance = $total_incoming - $total_expenses;
                                 @endphp
                                     <tr>
                                         <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
                                         <td class="date">{{ date('Y-m-d', strtotime($item->timestamp))}}</td>
-                                        <td class="category">@isset($item->category->name){{$item->category->name}}@endif</td>
+                                        <td class="company">@isset($item->company->name){{$item->company->name}}@endisset</td>
+                                        <td class="category">@isset($item->category->name){{$item->category->name}}@endisset</td>
                                         <td class="description">
                                             {{$item->description}}
                                             @if ($item->attachment != "")
@@ -136,13 +109,11 @@
                                             @endphp
                                             {{$types[$item->type-1]}}
                                         </td>
-                                        @if($role == 'admin')
-                                            <td class="py-1" style="min-width:130px;">
-                                                {{--<a href="{{route('transaction.edit', 'index')}}" class="btn bg-blue btn-icon rounded-round btn-edit" data-id="{{$item->id}}"  data-popup="tooltip" title="{{__('page.edit')}}" data-placement="top"><i class="icon-pencil7"></i></a>--}}
-                                                <a href="#" class="btn bg-blue btn-icon rounded-round btn-edit" data-id="{{$item->id}}"  data-popup="tooltip" title="{{__('page.edit')}}" data-placement="top"><i class="icon-pencil7"></i></a>
-                                                <a href="{{route('transaction.delete', $item->id)}}" class="btn bg-danger text-pink-800 btn-icon rounded-round ml-2" data-popup="tooltip" title="{{__('page.delete')}}" data-placement="top" onclick="return window.confirm('{{__('page.are_you_sure')}}')"><i class="icon-trash"></i></a>
-                                            </td>
-                                        @endif
+                                        <td class="py-1" style="min-width:130px;">
+                                            {{--<a href="{{route('transaction.edit', 'index')}}" class="btn bg-blue btn-icon rounded-round btn-edit" data-id="{{$item->id}}"  data-popup="tooltip" title="{{__('page.edit')}}" data-placement="top"><i class="icon-pencil7"></i></a>--}}
+                                            <a href="#" class="btn bg-blue btn-icon rounded-round btn-edit" data-id="{{$item->id}}"  data-popup="tooltip" title="{{__('page.edit')}}" data-placement="top"><i class="icon-pencil7"></i></a>
+                                            <a href="{{route('transaction.delete', $item->id)}}" class="btn bg-danger text-pink-800 btn-icon rounded-round ml-2" data-popup="tooltip" title="{{__('page.delete')}}" data-placement="top" onclick="return window.confirm('{{__('page.are_you_sure')}}')"><i class="icon-trash"></i></a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -151,7 +122,7 @@
                                     <td colspan="2">{{__('page.total')}}</td>
                                     <td colspan="3">{{__('page.expenses')}} : -{{number_format($expenses)}}</td>
                                     <td colspan="3">{{__('page.incomes')}} : {{number_format($incomes)}}</td>
-                                    <td colspan="2">{{__('page.profit')}} : {{number_format($incomes - $expenses)}}</td>
+                                    <td colspan="3">{{__('page.profit')}} : {{number_format($incomes - $expenses)}}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -189,7 +160,7 @@
                     @csrf
                     <div class="modal-body">
                         @csrf
-                        <input type="hidden" name="id" class="id" value="{{$item->id}}">
+                        <input type="hidden" name="id" class="id">
                         <div class="form-group">
                             <label>{{__('page.user')}}:</label>
                             <select data-placeholder="Select user" name="user" class="form-control form-control-select2 user" data-fouc>
@@ -211,26 +182,20 @@
                         <div class="form-group account_div">
                             <label>{{__('page.withdraw_from')}}:</label>
                             <select data-placeholder="{{__('page.withdraw_from')}}" name="account" class="form-control form-control-select2-icons account" id="from_account" data-fouc>
-                                @foreach ($accountgroups as $accountgroup)
-                                    <optgroup label="{{$accountgroup->name}}">
-                                        @foreach ($accountgroup->accounts as $account)
-                                            <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach                                
+                                <option value="">Select an account</option>
+                                @foreach ($accounts as $item)
+                                    <option value="{{$item->id}}" data-icon="wallet">{{$item->name}}</option>                                            
+                                @endforeach                              
                             </select>
                             <span class="form-text text-success account_error"></span>
                         </div>
                         <div class="form-group target_div">
                             <label>{{__('page.target_account')}}:</label>
                             <select data-placeholder="{{__('page.target_account')}}" name="target" class="form-control form-control-select2-icons target" id="target_account" data-fouc>
-                                @foreach ($accountgroups as $accountgroup)
-                                    <optgroup label="{{$accountgroup->name}}">
-                                        @foreach ($accountgroup->accounts as $account)
-                                            <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach                                
+                                <option value="">Select an account</option>
+                                @foreach ($accounts as $item)
+                                    <option value="{{$item->id}}" data-icon="wallet">{{$item->name}}</option>                                            
+                                @endforeach                                  
                             </select>
                             <span class="form-text text-success target_error"></span>
                         </div>

@@ -102,7 +102,7 @@
                         <div class="form-group">
                             <label class="control-label">{{__('page.company')}}</label>
                             <select class="form-control" name="company" required>
-                                <option value="">Select a company</option>
+                                <option value="" hidden>Select a company</option>
                                 @foreach ($companies as $item)
                                     <option value="{{$item->id}}">{{$item->name}}</option>                                    
                                 @endforeach
@@ -145,7 +145,7 @@
                     </div>    
                     <div class="modal-footer">
                         <button type="button" id="btn_create" class="btn btn-primary btn-submit"><i class="icon-paperplane"></i>&nbsp;{{__('page.save')}}</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="icon-close2"></i>&nbsp;{{__('page.save')}}</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="icon-close2"></i>&nbsp;{{__('page.close')}}</button>
                     </div>
                 </form>
             </div>
@@ -172,7 +172,7 @@
                         <div class="form-group">
                             <label class="control-label">{{__('page.company')}}</label>
                             <select class="form-control" name="company" required>
-                                <option value="">Select a company</option>
+                                <option value="" hidden>Select a company</option>
                                 @foreach ($companies as $item)
                                     <option value="{{$item->id}}">{{$item->name}}</option>                                    
                                 @endforeach

@@ -28,6 +28,7 @@ return [
     'user' => 'User',
     'category' => 'Category',
     'account' => 'Account',
+    'company' => 'Company',
 
     // ******** Common ********
     'home' => 'Home',
@@ -72,6 +73,7 @@ return [
     'select_type' => 'Select a type',
     'select_account' => 'Select an account',
     'select_category' => 'Select a category',
+    'select_company' => 'Select a company',
     'timestamp' => 'Timestamp',
     'amount' => 'Amount',
     'withdraw_from' => 'Withdraw From',
