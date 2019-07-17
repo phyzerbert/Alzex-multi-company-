@@ -101,13 +101,14 @@ class TransactionController extends Controller
         config(['site.page' => 'transaction_daily']);
         $user = Auth::user();
         $categories = Category::all();
+        $companies = Company::all();
         $accounts = Account::all();
         $users = User::all();
         
         $mod = new Transaction();
         $mod1 = new Transaction();
         $last_transaction = Transaction::orderBy('timestamp', 'desc')->first();
-        $category = $account = $description = $type = $period = $change_date = '';
+        $category = $company_id = $account = $description = $type = $period = $change_date = '';
         if($user->hasRole('user')){
             $company = $user->company;
             $company_id = $company->id;
@@ -127,6 +128,12 @@ class TransactionController extends Controller
             $type = $request->get('type');
             $mod = $mod->where('type', $type);
             $mod1 = $mod1->where('type', $type);
+        }
+
+        if ($request->get('company_id') != ""){
+            $company_id = $request->get('company_id');
+            $mod = $mod->where('company_id', $company_id);
+            $mod1 = $mod1->where('company_id', $company_id);
         }
         // if ($request->get('user') != ""){
         //     $user = $request->get('user');
@@ -170,7 +177,7 @@ class TransactionController extends Controller
         $data = $mod->orderBy('created_at', 'desc')->paginate($pagesize);
         $expenses = $mod->where('type', 1)->sum('amount');
         $incomes = $mod1->where('type', 2)->sum('amount');
-        return view('transaction.daily', compact('data', 'expenses', 'incomes', 'categories', 'accounts', 'users', 'type', 'description', 'category', 'account', 'period', 'pagesize'));
+        return view('transaction.daily', compact('data', 'expenses', 'incomes', 'companies', 'company_id', 'categories', 'accounts', 'users', 'type', 'description', 'category', 'account', 'period', 'pagesize'));
     }
 
     public function create(Request $request){

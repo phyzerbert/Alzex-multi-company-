@@ -51,6 +51,7 @@ class UserController extends Controller
         $request->validate([
             'name'=>'required',
             'phone_number'=>'required',
+            'password' => 'confirmed',
         ]);
         $user = Auth::user();
         $user->name = $request->get("name");
@@ -72,8 +73,9 @@ class UserController extends Controller
     public function edituser(Request $request){
         $request->validate([
             'name'=>'required',
-            'company'=>'required',
+            // 'company'=>'required',
             'phone'=>'required',
+            'password' => 'confirmed',
         ]);
         $user = User::find($request->get("id"));
         $user->name = $request->get("name");
@@ -90,7 +92,7 @@ class UserController extends Controller
     public function create(Request $request){
         $request->validate([
             'name'=>'required|string|unique:users',
-            'company'=>'required',
+            // 'company'=>'required',
             'phone_number'=>'required',
             'role'=>'required',
             'password'=>'required|string|min:6|confirmed'
