@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Account extends Model
 {
     protected $fillable = [
-        'name', 'comment' , 'group_id',
+        'name', 'company_id', 'comment' , 'balance',
     ];
 
     public function expenses(){
@@ -16,6 +16,10 @@ class Account extends Model
     
     public function incomings(){
         return $this->hasMany('App\Models\Transaction', 'to');
+    }  
+
+    public function company(){
+        return $this->belongsTo('App\Models\Company');
     }
 
 }

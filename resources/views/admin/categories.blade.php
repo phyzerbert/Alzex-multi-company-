@@ -30,7 +30,7 @@
                 <div class="card-header">
                     <button type="button" class="btn btn-primary float-right" id="btn-add"><i class="icon-plus-circle2 mr-2"></i> {{__('page.add_new')}}</button>
                 </div>
-                <div class="card-body">                    
+                <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
                             <thead>

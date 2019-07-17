@@ -17,6 +17,10 @@ class Transaction extends Model
     public function category(){
         return $this->belongsTo('App\Models\Category');
     }
+    
+    public function company(){
+        return $this->belongsTo('App\Models\Company');
+    }
 
     public function account(){
         return $this->belongsTo('App\Models\Account', 'from');

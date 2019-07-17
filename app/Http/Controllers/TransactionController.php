@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\User;
 use App\Models\Category;
+use App\Models\Company;
 use App\Models\Account;
-use App\Models\Accountgroup;
 
 class TransactionController extends Controller
 {
@@ -30,12 +30,12 @@ class TransactionController extends Controller
     {
         config(['site.page' => 'transaction']);
         $categories = Category::all();
-        $accountgroups = Accountgroup::all();
+        $companies = Company::all();
         $users = User::all();
         
         $mod = new Transaction();
         $mod1 = new Transaction();
-        $category = $account = $description = $type = $period = '';
+        $category = $company_id = $account = $description = $type = $period = '';
 
         if ($request->get('type') != ""){
             $type = $request->get('type');
@@ -76,7 +76,7 @@ class TransactionController extends Controller
         $data = $mod->orderBy('timestamp', 'desc')->paginate($pagesize);
         $expenses = $mod->where('type', 1)->sum('amount');
         $incomes = $mod1->where('type', 2)->sum('amount');
-        return view('transaction.index', compact('data', 'expenses', 'incomes', 'categories', 'accountgroups', 'users', 'type', 'description', 'category', 'account', 'period', 'pagesize'));
+        return view('transaction.index', compact('data', 'companies', 'expenses', 'incomes', 'categories', 'accountgroups', 'users', 'type', 'description', 'category', 'account', 'period', 'pagesize'));
     }
 
     public function daily(Request $request)
@@ -150,8 +150,8 @@ class TransactionController extends Controller
     public function create(Request $request){
         $users = User::all();
         $categories = Category::all();
-        $accountgroups = Accountgroup::all();        
-        return view('transaction.create', compact('users', 'categories', 'accountgroups'));
+        $companies = Company::all();        
+        return view('transaction.create', compact('users', 'companies', 'categories', 'accountgroups'));
     }
 
     public function expense(Request $request){
@@ -176,6 +176,7 @@ class TransactionController extends Controller
         Transaction::create([
             'type' => 1,
             'user_id' => $request->get('user'),
+            'company_id' => $request->get('company'),
             'category_id' => $request->get('category'),
             'from' => $request->get('account'),
             'amount' => $request->get('amount'),

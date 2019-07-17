@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Account;
+use App\Models\Company;
 use App\Models\Accountgroup;
 
 class AccountController extends Controller
@@ -26,70 +27,43 @@ class AccountController extends Controller
     public function index()
     {
         config(['site.page' => 'account']);
-        $data = Accountgroup::all();
-        return view('admin.accounts', compact('data'));
+        $data = Account::all();
+        $companies = Company::all();
+        return view('admin.accounts', compact('data', 'companies'));
     }
 
 
     public function create(Request $request){
         $request->validate([
             'name'=>'required|string',
-            'group'=>'required',
+            'company'=>'required',
         ]);
 
         Account::create([
             'name' => $request->get('name'),
-            'comment' => $request->get('comment'),
-            'group_id' => $request->get('group'),
-        ]);
-        return back()->with('success', 'Created Successfully');
-    }
-
-    public function create_group(Request $request){
-        $request->validate([
-            'name'=>'required|string',
-        ]);
-
-        Accountgroup::create([
-            'name' => $request->get('name'),
+            'company_id' => $request->get('company'),
             'comment' => $request->get('comment'),
         ]);
-        return back()->with('success', 'Created Successfully');
+        return back()->with('success', __('page.created_successfully'));
     }
 
     public function edit(Request $request){
         $request->validate([
             'name'=>'required',
-            'group'=>'required',
+            'company'=>'required',
         ]);
         $item = Account::find($request->get("id"));
         $item->name = $request->get("name");
         $item->comment = $request->get("comment");
-        $item->group_id = $request->get("group");
+        $item->company_id = $request->get("company");
         $item->save();
-        return back()->with('success', 'Updated Successfully');
-    }
-
-    public function edit_group(Request $request){
-        $request->validate([
-            'name'=>'required',
-        ]);
-        $item = Accountgroup::find($request->get("id"));
-        $item->name = $request->get("name");
-        $item->comment = $request->get("comment");
-        $item->save();
-        return back()->with('success', 'Updated Successfully');
+        return back()->with('success', __('page.updated_successfully'));
     }
 
     public function delete($id){
         $item = Account::find($id);
         $item->delete();
-        return back()->with("success", "Deleted Successfully");
+        return back()->with("success", __('page.deleted_successfully'));
     }
 
-    public function delete_group($id){
-        $item = Accountgroup::find($id);
-        $item->delete();
-        return back()->with("success", "Deleted Successfully");
-    }
 }

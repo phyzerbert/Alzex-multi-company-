@@ -41,7 +41,15 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\Role');
     }
 
+    public function hasRole($role){
+        return $this->role->slug == $role;
+    }
+
     public function transactions(){
         return $this->hasMany('App\Models\Transaction');
+    }
+
+    public function company(){
+        return $this->belongsTo('App\Models\Company');
     }
 }

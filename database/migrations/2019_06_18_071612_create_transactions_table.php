@@ -17,6 +17,7 @@ class CreateTransactionsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('type');
             $table->integer('user_id')->nullable();
+            $table->integer('company_id')->nullable();
             $table->integer('category_id')->nullable();
             $table->string('description')->nullable();
             $table->integer('from')->nullable();

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAccountgroupsTable extends Migration
+class CreateCompaniesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateAccountgroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('accountgroups', function (Blueprint $table) {
+        Schema::create('companies', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('comment')->nullable();
-            $table->integer('status')->default(0);
+            $table->string('name')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateAccountgroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('accountgroups');
+        Schema::dropIfExists('companies');
     }
 }

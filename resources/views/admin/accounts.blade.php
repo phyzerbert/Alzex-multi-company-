@@ -29,46 +29,35 @@
             <div class="card">
                 <div class="card-header">
                     <button type="button" class="btn btn-primary float-right" id="btn-add"><i class="icon-plus-circle2 mr-2"></i> {{__('page.add_account')}}</button>
-                    <button type="button" class="btn btn-info float-right mr-2" id="btn-group"><i class="icon-folder-plus2 mr-2"></i> {{__('page.add_group')}}</button>
                 </div>
-                <div class="card-body sidebar-light">
-                    <div class="row bg-blue-400 p-2">
-                        <div class="col-md-4" style="padding-left:67px">{{__('page.name')}}</div>
-                        <div class="col-md-6" style="padding-left:48px">{{__('page.comment')}}</div>
-                        <div class="col-md-2" style="padding-left:38px">{{__('page.action')}}</div>
+                <div class="card-body sidebar-light">                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr class="bg-blue">
+                                    <th style="width:30px;">#</th>
+                                    <th>{{__('page.name')}}</th>
+                                    <th>{{__('page.company')}}</th>
+                                    <th>{{__('page.comment')}}</th>
+                                    <th>{{__('page.action')}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>                                
+                                @foreach ($data as $item)
+                                    <tr>
+                                        <td>{{ $loop->index + 1 }}</td>
+                                        <td class="name">{{$item->name}}</td>
+                                        <td class="company_id" data-id="{{$item->company_id}}">@isset($item->company->name){{$item->company->name}} @endisset</td>                                       
+                                        <td class="comment">{{$item->comment}}</td>
+                                        <td class="py-1">
+                                            <a href="#" class="btn bg-blue btn-icon rounded-round btn-edit" data-id="{{$item->id}}"  data-popup="tooltip" title="{{__('page.edit')}}" data-placement="top"><i class="icon-pencil7"></i></a>
+                                            <a href="{{route('category.delete', $item->id)}}" class="btn bg-danger text-pink-800 btn-icon rounded-round ml-2" data-popup="tooltip" title="{{__('page.delete')}}" data-placement="top" onclick="return window.confirm('{{__('page.are_you_sure')}}')"><i class="icon-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                    <ul class="nav nav-sidebar" data-nav-type="collapsible">
-                        @foreach ($data as $item)
-                            @php
-                                $accounts = $item->accounts;
-                            @endphp
-                            <li class="nav-item nav-item-submenu">                                    
-                                <div class="nav-link"><i class="icon-arrow-right15"></i>
-                                    <div class="text-primary col-md-4 name">{{$item->name}}</div>
-                                    <div class="text-info col-md-6 comment">{{$item->comment}}</div>
-                                    <div class="text-primary col-md-2 list-icons" style="padding-left:36px;">
-                                        <a href="#" class="list-icons-item text-primary-600 btn-group-edit" data-id="{{$item->id}}"><i class="icon-pencil7"></i></a>
-                                        <a href="{{route('accountgroup.delete', $item->id)}}" class="list-icons-item text-danger-600" onclick="return window.confirm('Are you sure?')"><i class="icon-trash"></i></a>
-                                    </div>
-                                </div>
-                                <ul class="nav nav-group-sub">
-                                    @foreach ($accounts as $child)
-                                        <li class="nav-item">
-                                            <div class="nav-link"><i class="icon-arrow-right15"></i>
-                                                <div class="d-none group" data-id="{{$item->id}}"></div>
-                                                <div class="text-primary col-md-4 name">{{$child->name}}</div>
-                                                <div class="text-info col-md-6 comment">{{$child->comment}}</div>
-                                                <div class="text-primary col-md-2 list-icons">
-                                                    <a href="#" class="list-icons-item text-primary-600 btn-edit" data-id="{{$child->id}}"><i class="icon-pencil7"></i></a>
-                                                    <a href="{{route('account.delete', $child->id)}}" class="list-icons-item text-danger-600" onclick="return window.confirm('Are you sure?')"><i class="icon-trash"></i></a>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </li>
-                        @endforeach
-                    </ul>
                 </div>
             </div>
         </div>                
@@ -91,42 +80,15 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label">{{__('page.group')}}</label>
-                            <select class="form-control" name="group">
-                                <option value="">Select a group</option>
-                                @foreach ($data as $item)
+                            <label class="control-label">{{__('page.company')}}</label>
+                            <select class="form-control" name="company">
+                                <option value="">Select a company</option>
+                                @foreach ($companies as $item)
                                     <option value="{{$item->id}}">{{$item->name}}</option>                                    
                                 @endforeach
                             </select>
                         </div>
 
-                        <div class="form-group">
-                            <label class="control-label">{{__('page.comment')}}</label>
-                            <input class="form-control" type="text" name="comment" placeholder="{{__('page.comment')}}">
-                        </div>
-                    </div>    
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary btn-submit"><i class="icon-paperplane"></i>&nbsp;{{__('page.save')}}</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="icon-close2"></i>&nbsp;{{__('page.close')}}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="addgroupModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">{{__('page.add_new_group')}}</h4>
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                </div>
-                <form action="{{route('accountgroup.create')}}" id="addgroup_form" method="post">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label class="control-label">{{__('page.name')}}</label>
-                            <input class="form-control" type="text" name="name" placeholder="{{__('page.name')}}">
-                        </div>
                         <div class="form-group">
                             <label class="control-label">{{__('page.comment')}}</label>
                             <input class="form-control" type="text" name="comment" placeholder="{{__('page.comment')}}">
@@ -156,10 +118,10 @@
                             <input class="form-control name" type="text" name="name" placeholder="Name">
                         </div>
                         <div class="form-group">
-                            <label class="control-label">{{__('page.group')}}</label>
-                            <select class="form-control group" name="group">
-                                <option value="">Select a group</option>
-                                @foreach ($data as $item)
+                            <label class="control-label">{{__('page.company')}}</label>
+                            <select class="form-control company_id" name="company">
+                                <option value="">Select a company</option>
+                                @foreach ($companies as $item)
                                     <option value="{{$item->id}}">{{$item->name}}</option>                                    
                                 @endforeach
                             </select>
@@ -167,36 +129,6 @@
                         <div class="form-group">
                             <label class="control-label">{{__('page.comment')}}</label>
                             <input class="form-control comment" type="text" name="comment" placeholder="{{__('page.Comment')}}">
-                        </div>
-                    </div>
-    
-                    <div class="modal-footer">
-                        <button type="submit" id="btn_update" class="btn btn-primary btn-submit"><i class="icon-paperplane"></i>&nbsp;{{__('page.save')}}</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="icon-close2"></i>&nbsp;{{__('page.close')}}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    
-    <div class="modal fade" id="editgroupModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">{{__('page.edit_group')}}</h4>
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                </div>
-                <form action="{{route('accountgroup.edit')}}" id="edit_group_form" method="post">
-                    @csrf
-                    <div class="modal-body">
-                        <input type="hidden" class="id" name="id" />                    
-                        <div class="form-group">
-                            <label class="control-label">{{__('page.name')}}</label>
-                            <input class="form-control name" type="text" name="name" placeholder="{{__('page.name')}}">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">{{__('page.comment')}}</label>
-                            <input class="form-control comment" type="text" name="comment" placeholder="{{__('page.comment')}}">
                         </div>
                     </div>
     
@@ -219,37 +151,19 @@
             $("#addModal").modal();
         });
 
-        $("#btn-group").click(function(){
-            $("#addgroup_form input.form-control").val('');
-            $("#addgroupModal").modal();
-        });
-
         $(".btn-edit").click(function(){
             let id = $(this).attr("data-id");
-            let name = $(this).parents('.nav-link').find(".name").text().trim();
-            let comment = $(this).parents('.nav-link').find(".comment").text().trim();
-            let group = $(this).parents('.nav-link').find(".group").data('id');
+            let name = $(this).parents('tr').find(".name").text().trim();
+            let company_id = $(this).parents('tr').find(".company_id").data('id');
+            let comment = $(this).parents('tr').find(".comment").text().trim();
 
             $("#edit_form input.form-control").val('');
             $("#editModal .id").val(id);
             $("#editModal .name").val(name);
-            $("#editModal .group").val(group);
+            $("#editModal .company_id").val(company_id);
             $("#editModal .comment").val(comment);
 
             $("#editModal").modal();
-        });
-
-        $(".btn-group-edit").click(function(){
-            let id = $(this).attr("data-id");
-            let name = $(this).parents('.nav-link').find(".name").text().trim();
-            let comment = $(this).parents('.nav-link').find(".comment").text().trim();
-
-            $("#edit_group_form input.form-control").val('');
-            $("#edit_group_form .id").val(id);
-            $("#edit_group_form .name").val(name);
-            $("#edit_group_form .comment").val(comment);
-
-            $("#editgroupModal").modal();
         });
 
     });

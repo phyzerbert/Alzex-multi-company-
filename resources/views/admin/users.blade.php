@@ -40,11 +40,12 @@
                             <thead>
                                 <tr class="bg-blue">
                                     <th style="width:30px;">#</th>
-                                    <th>Name</th>
-                                    <th>Role</th>
-                                    <th>Phone Number</th>
+                                    <th>{{__('page.username')}}</th>
+                                    <th>{{__('page.company')}}</th>
+                                    <th>{{__('page.role')}}</th>
+                                    <th>{{__('page.phone_number')}}</th>
                                     @if ($role == 'admin')
-                                        <th>Action</th>                                        
+                                        <th>{{__('page.action')}}</th>                                        
                                     @endif
                                 </tr>
                             </thead>
@@ -53,6 +54,7 @@
                                     <tr>
                                         <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
                                         <td class="username">{{$item->name}}</td>
+                                        <td class="company" data-id="{{$item->company_id}}">@isset($item->company->name) {{$item->company->name}} @endisset</td>
                                         <td class="role" data-id="{{$item->role_id}}">{{$item->role->name}}</td>
                                         <td class="phone">{{$item->phone_number}}</td>
                                         @if ($role == 'admin')
@@ -92,14 +94,26 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label class="control-label">{{__('page.username')}}</label>
-                            <input class="form-control" type="text" name="name" id="name" placeholder="{{__('page.username')}}">
+                            <input class="form-control" type="text" name="name" id="name" required placeholder="{{__('page.username')}}">
                             <span id="name_error" class="invalid-feedback">
                                 <strong></strong>
                             </span>
                         </div>
                         <div class="form-group">
+                            <label class="control-label">{{__('page.company')}}</label>
+                            <select class="form-control" name="company" required>
+                                <option value="">Select a company</option>
+                                @foreach ($companies as $item)
+                                    <option value="{{$item->id}}">{{$item->name}}</option>                                    
+                                @endforeach
+                            </select>
+                            <span id="company_error" class="invalid-feedback">
+                                <strong></strong>
+                            </span>
+                        </div>
+                        <div class="form-group">
                             <label class="control-label">{{__('page.phone_number')}}</label>
-                            <input class="form-control" type="text" name="phone_number" id="phone" placeholder="{{__('page.phone_number')}}">
+                            <input class="form-control" type="text" name="phone_number" id="phone" required placeholder="{{__('page.phone_number')}}">
                             <span id="phone_error" class="invalid-feedback">
                                 <strong></strong>
                             </span>
@@ -150,14 +164,26 @@
                         <input type="hidden" name="id" id="edit_id" />                    
                         <div class="form-group">
                             <label class="control-label">{{__('page.username')}}</label>
-                            <input class="form-control" type="text" name="name" id="edit_name" placeholder="{{__('page.username')}}">
+                            <input class="form-control" type="text" name="name" id="edit_name" required placeholder="{{__('page.username')}}">
                             <span id="edit_name_error" class="invalid-feedback">
                                 <strong></strong>
                             </span>
                         </div>
                         <div class="form-group">
+                            <label class="control-label">{{__('page.company')}}</label>
+                            <select class="form-control" name="company" required>
+                                <option value="">Select a company</option>
+                                @foreach ($companies as $item)
+                                    <option value="{{$item->id}}">{{$item->name}}</option>                                    
+                                @endforeach
+                            </select>
+                            <span id="company_error" class="invalid-feedback">
+                                <strong></strong>
+                            </span>
+                        </div>
+                        <div class="form-group">
                             <label class="control-label">{{__('page.phone_number')}}</label>
-                            <input class="form-control" type="text" name="phone" id="edit_phone" placeholder="{{__('page.phone_number')}}">
+                            <input class="form-control" type="text" name="phone" id="edit_phone" required placeholder="{{__('page.phone_number')}}">
                             <span id="edit_phone_error" class="invalid-feedback">
                                 <strong></strong>
                             </span>
@@ -221,6 +247,12 @@
                             $('#name_error').show();
                             $('#create_form #name').focus();
                         }
+
+                        if(messages.company) {
+                            $('#company_error strong').text(data.responseJSON.errors.company[0]);
+                            $('#company_error').show();
+                            $('#create_form .company').focus();
+                        }
                         
                         if(messages.role) {
                             $('#role_error strong').text(data.responseJSON.errors.role[0]);
@@ -281,6 +313,12 @@
                             $('#edit_name_error strong').text(data.responseJSON.errors.name[0]);
                             $('#edit_name_error').show();
                             $('#edit_form #edit_name').focus();
+                        }
+
+                        if(messages.company) {
+                            $('#company_error strong').text(data.responseJSON.errors.company[0]);
+                            $('#company_error').show();
+                            $('#edit_form .company').focus();
                         }
 
                         if(messages.password) {

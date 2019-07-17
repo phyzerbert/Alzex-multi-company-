@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Company;
 use App\User;
 
 use Auth;
@@ -28,8 +29,9 @@ class UserController extends Controller
     public function index()
     {
         config(['site.page' => 'user']);
+        $companies = Company::all();
         $data = User::paginate(15);
-        return view('admin.users', compact('data'));
+        return view('admin.users', compact('data', 'companies'));
     }
 
         
@@ -69,10 +71,12 @@ class UserController extends Controller
     public function edituser(Request $request){
         $request->validate([
             'name'=>'required',
+            'company'=>'required',
             'phone'=>'required',
         ]);
         $user = User::find($request->get("id"));
         $user->name = $request->get("name");
+        $user->company_id = $request->get("company");
         $user->phone_number = $request->get("phone");
 
         if($request->get('password') != ''){
@@ -85,6 +89,7 @@ class UserController extends Controller
     public function create(Request $request){
         $request->validate([
             'name'=>'required|string|unique:users',
+            'company'=>'required',
             'phone_number'=>'required',
             'role'=>'required',
             'password'=>'required|string|min:6|confirmed'
@@ -92,6 +97,7 @@ class UserController extends Controller
         
         User::create([
             'name' => $request->get('name'),
+            'company_id' => $request->get('company'),
             'phone_number' => $request->get('phone_number'),
             'role_id' => $request->get('role'),
             'password' => Hash::make($request->get('password'))

@@ -16,9 +16,9 @@ class CreateAccountsTable extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->integer('company_id')->nullable();
             $table->string('comment')->nullable();
             $table->float('balance', 14, 2)->default(0);
-            $table->integer('group_id')->default(0);
             $table->timestamps();
         });
     }
