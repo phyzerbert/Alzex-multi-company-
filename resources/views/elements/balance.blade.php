@@ -5,10 +5,10 @@
             <div class="dropdown-menu">
                 @php
                     $balance = \App\Models\Account::sum('balance');
+                    $accounts = \App\Models\Account::all();
                 @endphp
-                @foreach ($accountgroups as $accountgroup)
-                    <div class="dropdown-header dropdown-header-highlight">{{$accountgroup->name}}</div>
-                    @foreach ($accountgroup->accounts as $item)                                         
+                <div class="dropdown-header dropdown-header-highlight">{{$balance}}</div>
+                    @foreach ($accounts as $item)                                         
                         <div class="dropdown-item">
                             <div class="flex-grow-1">{{$item->name}}</div>
                             <div class="">                                                
@@ -21,8 +21,7 @@
                             </div>
                         </div>
                     @endforeach
-                    <div class="dropdown-divider"></div>
-                @endforeach
+                <div class="dropdown-divider"></div>
             </div>
         </div>
     </div>

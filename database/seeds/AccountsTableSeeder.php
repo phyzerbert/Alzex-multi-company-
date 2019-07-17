@@ -13,33 +13,24 @@ class AccountsTableSeeder extends Seeder
     public function run()
     {
         Account::create([
-            'name' => 'Cash1',
-            'group_id' => 1,
+            'name' => 'Account1',
+            'company_id' => 1,
         ]);
 
         Account::create([
-            'name' => 'Cash2',
-            'group_id' => 1,
+            'name' => 'Account1',
+            'company_id' => 1,
         ]);
 
         Account::create([
-            'name' => 'Visa',
-            'group_id' => 2,
+            'name' => 'Account3',
+            'company_id' => 2,
         ]);
 
         Account::create([
-            'name' => 'Master',
-            'group_id' => 2,
+            'name' => 'Account4',
+            'company_id' => 2,
         ]);
 
-        Account::create([
-            'name' => 'Bank1',
-            'group_id' => 3,
-        ]);
-
-        Account::create([
-            'name' => 'Bank2',
-            'group_id' => 3,
-        ]);
     }
 }

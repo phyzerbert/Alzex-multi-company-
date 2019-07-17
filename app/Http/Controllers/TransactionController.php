@@ -176,7 +176,7 @@ class TransactionController extends Controller
         Transaction::create([
             'type' => 1,
             'user_id' => $request->get('user'),
-            'company_id' => $request->get('company'),
+            'company_id' => $account->company_id,
             'category_id' => $request->get('category'),
             'from' => $request->get('account'),
             'amount' => $request->get('amount'),
@@ -204,10 +204,12 @@ class TransactionController extends Controller
             $image->move(public_path('uploaded/transaction_attachments'), $imageName);
             $attachment = 'uploaded/transaction_attachments/'.$imageName;
         }
+        $account = Account::find($request->get('account'));
 
         Transaction::create([
             'type' => 2,
             'user_id' => $request->get('user'),
+            'company_id' => $account->company_id,
             'category_id' => $request->get('category'),
             'to' => $request->get('account'),
             'amount' => $request->get('amount'),
@@ -215,7 +217,6 @@ class TransactionController extends Controller
             'timestamp' => $request->get('timestamp'),
             'attachment' => $attachment,
         ]);
-        $account = Account::find($request->get('account'));
         $account->increment('balance', $request->get('amount'));
 
         return back()->with('success', __('page.created_successfully'));
@@ -247,6 +248,7 @@ class TransactionController extends Controller
         Transaction::create([
             'type' => 3,
             'user_id' => $request->get('user'),
+            'company_id' => $account->company_id,
             'category_id' => $request->get('category'),
             'from' => $request->get('account'),
             'to' => $request->get('target'),
@@ -362,7 +364,7 @@ class TransactionController extends Controller
         }
 
         $item->delete();
-        return back()->with("success", "Deleted Successfully");
+        return back()->with("success", __('page.deleted_successfully'));
     }
     
     public function get_transaction(Request $request){
