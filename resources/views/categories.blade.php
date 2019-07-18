@@ -31,21 +31,21 @@
                     <form action="" method="POST" class="form-inline float-left" id="searchForm">
                         @csrf
                         @if (Auth::user()->hasRole('admin'))
-                            <select class="form-control form-control-sm mr-sm-2 mb-2" name="company_id" id="search_company">
+                            <select class="form-control form-control-sm mr-sm-2" name="company_id" id="search_company">
                                 <option value="">{{__('page.select_company')}}</option>
                                 @foreach ($companies as $item)
                                     <option value="{{$item->id}}" data-icon="wallet" @if($company_id == $item->id) selected @endif>{{$item->name}}</option>                                            
                                 @endforeach     
                             </select>
-                            <select class="form-control form-control-sm mr-sm-2 mb-2" name="user_id" id="search_user">
+                            <select class="form-control form-control-sm mr-sm-2" name="user_id" id="search_user">
                                 <option value="">{{__('page.select_user')}}</option>
                                 @foreach ($users as $item)
                                     <option value="{{$item->id}}" data-icon="wallet" @if($user_id == $item->id) selected @endif>{{$item->name}}</option>                                            
                                 @endforeach     
                             </select>
                         @endif
-                        <input type="text" class="form-control form-control-sm mr-sm-2 mb-2" name="name" id="search_name" value="{{$name}}" placeholder="{{__('page.name')}}">
-                        <input type="text" class="form-control form-control-sm mr-sm-2 mb-2" name="comment" id="search_description" value="{{$comment}}" placeholder="{{__('page.comment')}}">
+                        <input type="text" class="form-control form-control-sm mr-sm-2" name="name" id="search_name" value="{{$name}}" placeholder="{{__('page.name')}}">
+                        <input type="text" class="form-control form-control-sm mr-sm-2" name="comment" id="search_description" value="{{$comment}}" placeholder="{{__('page.comment')}}">
                         
                         <button type="submit" class="btn btn-sm btn-primary mb-2"><i class="icon-search4"></i>&nbsp;&nbsp;{{__('page.search')}}</button>
                         <button type="button" class="btn btn-sm btn-info mb-2 ml-1" id="btn-reset"><i class="icon-eraser"></i>&nbsp;&nbsp;{{__('page.reset')}}</button>
