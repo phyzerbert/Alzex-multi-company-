@@ -72,11 +72,9 @@ class HomeController extends Controller
     } 
     
     public function set_pagesize(Request $request){
-        // config(['app.pagesize' => $request->get('pagesize')]);
-        $request->session()->put('pagesize', $request->get('pagesize'));
-        // $setting = Setting::find(1);
-        // $setting->pagesize = $request->get('pagesize');
-        // $setting->save();
+        $pagesize = $request->get('pagesize');
+        if($pagesize == '') $pagesize = 15;
+        $request->session()->put('pagesize', $pagesize);
         return back();
     }
 }
