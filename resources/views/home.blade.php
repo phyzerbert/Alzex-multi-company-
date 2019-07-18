@@ -113,23 +113,27 @@
                     }else{
                         $chart_start = Carbon::now()->startOfMonth();
                         $chart_end = Carbon::now()->endOfMonth();
-                    }
+                    }                   
 
                     $company_array = \App\Models\Company::pluck('name')->toArray();
                     
-                    $key_array = $company_incoming = array();
-                    foreach ($companies as $item) {
-                        $company_incoming[$item->name] = array();
-                        for ($dt=$chart_start; $dt < $chart_end; $dt->addDay()) {
-                            $key = $dt->format('Y-m-d');
-                            $key1 = $dt->format('M/d');
-                            array_push($key_array, $key1);
-                            $daily_incoming = $item->transactions()->where('type', 2)->whereDate('timestamp', $key)->sum('amount');                            
-                            array_push($company_incoming[$item->name], $daily_incoming);
-                        }
+                    $key_array = $key_array1 = $company_incoming = array();
+
+                    for ($dt=$chart_start; $dt < $chart_end; $dt->addDay()) {
+                        $key = $dt->format('M/d');
+                        $key1 = $dt->format('Y-m-d');
+                        array_push($key_array, $key);
+                        array_push($key_array1, $key1);
                     }
 
-                    // dump($company_array);
+                    foreach ($companies as $item) {                        
+                        $company_incoming[$item->name] = array();
+                        foreach ($key_array1 as $dd) {
+                            $daily_incoming = $item->transactions()->where('type', 2)->whereDate('timestamp', $dd)->sum('amount');
+                            array_push($company_incoming[$item->name], $daily_incoming);
+                        }
+                        // dump($company_incoming);
+                    }                   
 
                 @endphp
 
@@ -429,6 +433,7 @@
                     var company_incoming = {!! json_encode($company_incoming) !!}
                     var company_series = [];
                     for (let company_name in company_incoming) {
+                        console.log(company_name)
                         const element = company_incoming[company_name]
                         let company_data = {
                                 name: company_name,
@@ -449,7 +454,7 @@
                             }                       
                         company_series.push(company_data)
                     }
-
+console.log(company_series)
                     area_basic.setOption({
 
                         color: ['#2ec7c9','#b6a2de','#5ab1ef','#ffb980','#d87a80'],
