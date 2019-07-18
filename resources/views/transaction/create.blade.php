@@ -80,7 +80,7 @@
 
                                 <div class="form-group">
                                     <label>{{__('page.amount')}}:</label>
-                                    <input type="text" name="amount" class="form-control" required placeholder="{{__('page.amount')}}">
+                                    <input type="text" name="amount" class="form-control" value="{{old('amount')}}" required placeholder="{{__('page.amount')}}">
                                     @error('amount')
                                         <span class="form-text text-success">{{ $message }}</span>
                                     @enderror
@@ -143,7 +143,7 @@
 
                                 <div class="form-group">
                                     <label>{{__('page.amount')}}:</label>
-                                    <input type="text" name="amount" class="form-control" required placeholder="{{__('page.amount')}}">
+                                    <input type="text" name="amount" class="form-control" value="{{old('amount')}}" required placeholder="{{__('page.amount')}}">
                                 </div>
 
                                 <div class="form-group">
@@ -215,7 +215,7 @@
 
                                 <div class="form-group">
                                     <label>{{__('page.amount')}}:</label>
-                                    <input type="text" name="amount" class="form-control" required placeholder="{{__('page.amount')}}">
+                                    <input type="text" name="amount" class="form-control" value="{{old('amount')}}" required placeholder="{{__('page.amount')}}">
                                     @error('amount')
                                         <span class="form-text text-success">{{ $message }}</span>
                                     @enderror
