@@ -31,22 +31,22 @@
                         <form action="" class="form-inline" method="post">
                             @csrf
                             @if (Auth::user()->hasRole('admin'))
-                                <select class="form-control form-control-sm mr-sm-2" name="company_id" id="search_company">
+                                <select class="form-control form-control-sm mt-2 mr-sm-2" name="company_id" id="search_company">
                                     <option value="" hidden>{{__('page.select_company')}}</option>
                                     @foreach ($companies as $item)
                                         <option value="{{$item->id}}" data-icon="wallet" @if($company_id == $item->id) selected @endif>{{$item->name}}</option>                                            
                                     @endforeach     
                                 </select>
                             @endif
-                            <div class="input-group">
+                            <div class="input-group mt-2">
                                 <span class="input-group-prepend">
                                     <span class="input-group-text"><i class="icon-calendar"></i></span>
                                 </span>
                                 <input type="text" name="spec_date" id="spec_date" class="form-control form-control-sm mr-2 spec_date" value="{{$spec_date}}" placeholder="{{__('page.date')}}" autocomplete="off">
                             </div>
-                            <input type="text" name="period" id="overview-period" class="form-control form-control-sm period" value="{{$period}}" placeholder="{{__('page.timestamp')}}" autocomplete="off" style="min-width:200px;">
-                            <button type="submit" class="btn btn-primary btn-sm ml-2"><i class="icon-search4"></i> {{__('page.search')}}</button>
-                            <button type="button" id="btn-reset" class="btn btn-danger btn-sm ml-2"><i class="icon-eraser"></i> {{__('page.reset')}}</button>
+                            <input type="text" name="period" id="overview-period" class="form-control form-control-sm mt-2 period" value="{{$period}}" placeholder="{{__('page.timestamp')}}" autocomplete="off" style="min-width:200px;">
+                            <button type="submit" class="btn btn-primary btn-sm mt-2 ml-2"><i class="icon-search4"></i> {{__('page.search')}}</button>
+                            <button type="button" id="btn-reset" class="btn btn-danger btn-sm mt-2 ml-2"><i class="icon-eraser"></i> {{__('page.reset')}}</button>
                         </form>
                     </div>
                     <div class="header-elements">
