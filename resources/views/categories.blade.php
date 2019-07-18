@@ -44,7 +44,7 @@
                                 @endforeach     
                             </select>
                         @endif
-                        <input type="text" class="form-control form-control-sm mr-sm-2 mb-2" name="name" id="search_description" value="{{$name}}" placeholder="{{__('page.name')}}">
+                        <input type="text" class="form-control form-control-sm mr-sm-2 mb-2" name="name" id="search_name" value="{{$name}}" placeholder="{{__('page.name')}}">
                         <input type="text" class="form-control form-control-sm mr-sm-2 mb-2" name="comment" id="search_description" value="{{$comment}}" placeholder="{{__('page.comment')}}">
                         
                         <button type="submit" class="btn btn-sm btn-primary mb-2"><i class="icon-search4"></i>&nbsp;&nbsp;{{__('page.search')}}</button>
@@ -193,6 +193,13 @@
 
             $("#editModal").modal();
         });
+
+        $("#btn-reset").click(function(){
+            $("#search_user").val('');
+            $("#search_company").val('');
+            $("#search_name").val('');
+            $("#search_description").val('');
+        })
 
     });
 </script>
