@@ -49,6 +49,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Transaction');
     }
 
+    public function categories(){
+        return $this->hasMany('App\Models\Category');
+    }
+
     public function company(){
         return $this->belongsTo('App\Models\Company');
     }

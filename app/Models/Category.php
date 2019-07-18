@@ -7,11 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     protected $fillable = [
-        'name', 'comment', 'parent_id',
+        'name', 'comment', 'user_id', 'parent_id',
     ];
 
     public function parent(){
         return $this->belongsTo('App\Models\Category', 'parent_id');
+    }
+
+    public function user(){
+        return $this->belongsTo('App\User');
     }
 
     public function children(){

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 
+use Auth;
+
 class CategoryController extends Controller
 {
     /**
@@ -25,8 +27,12 @@ class CategoryController extends Controller
     public function index()
     {
         config(['site.page' => 'category']);
+        $user = Auth::user();
         $data = Category::all();
-        return view('admin.categories', compact('data'));
+        if($user->hasRole('user')){
+            $data = $user->categories;
+        }
+        return view('categories', compact('data'));
     }
 
     public function edit(Request $request){
@@ -47,8 +53,8 @@ class CategoryController extends Controller
 
         Category::create([
             'name' => $request->get('name'),
-            'comment' => $request->get('comment'),
-            'parent_id' => $request->get('parent'),
+            'user_id' => $request->get('name'),
+            'comment' => Auth::user()->id,
         ]);
         return back()->with('success', 'Created Successfully');
     }

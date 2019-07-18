@@ -28,7 +28,9 @@
         <div class="container content">
             <div class="card">
                 <div class="card-header">
-                    <button type="button" class="btn btn-primary float-right" id="btn-add"><i class="icon-plus-circle2 mr-2"></i> {{__('page.add_new')}}</button>
+                    @if(Auth::user()->hasRole('user'))
+                        <button type="button" class="btn btn-primary float-right" id="btn-add"><i class="icon-plus-circle2 mr-2"></i> {{__('page.add_new')}}</button>
+                    @endif
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -37,8 +39,11 @@
                                 <tr class="bg-blue">
                                     <th style="width:30px;">#</th>
                                     <th>{{__('page.name')}}</th>
+                                    <th>{{__('page.username')}}</th>
                                     <th>{{__('page.comment')}}</th>
-                                    <th>{{__('page.action')}}</th>
+                                    @if (Auth::user()->hasRole('user'))                                        
+                                        <th>{{__('page.action')}}</th>                                    
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>                                
@@ -46,11 +51,14 @@
                                     <tr>
                                         <td>{{ $loop->index + 1 }}</td>
                                         <td class="name">{{$item->name}}</td>
+                                        <td class="user">{{$item->user->name}}</td>
                                         <td class="comment">{{$item->comment}}</td>
-                                        <td class="py-1">
-                                            <a href="#" class="btn bg-blue btn-icon rounded-round btn-edit" data-id="{{$item->id}}"  data-popup="tooltip" title="{{__('page.edit')}}" data-placement="top"><i class="icon-pencil7"></i></a>
-                                            <a href="{{route('category.delete', $item->id)}}" class="btn bg-danger text-pink-800 btn-icon rounded-round ml-2" data-popup="tooltip" title="{{__('page.delete')}}" data-placement="top" onclick="return window.confirm('{{__('page.are_you_sure')}}')"><i class="icon-trash"></i></a>
-                                        </td>
+                                        @if (Auth::user()->hasRole('user'))     
+                                            <td class="py-1">
+                                                <a href="#" class="btn bg-blue btn-icon rounded-round btn-edit" data-id="{{$item->id}}"  data-popup="tooltip" title="{{__('page.edit')}}" data-placement="top"><i class="icon-pencil7"></i></a>
+                                                <a href="{{route('category.delete', $item->id)}}" class="btn bg-danger text-pink-800 btn-icon rounded-round ml-2" data-popup="tooltip" title="{{__('page.delete')}}" data-placement="top" onclick="return window.confirm('{{__('page.are_you_sure')}}')"><i class="icon-trash"></i></a>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
