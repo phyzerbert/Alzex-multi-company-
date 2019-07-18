@@ -23,7 +23,7 @@ class CreateTransactionsTable extends Migration
             $table->integer('from')->nullable();
             $table->integer('to')->nullable();
             $table->integer('status')->nullable();
-            $table->float('amount', 14, 2)->nullable();
+            $table->integer('amount')->nullable();
             $table->dateTime('timestamp')->useCurrent();
             $table->string('attachment')->nullable();
             $table->timestamps();
