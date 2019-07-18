@@ -58,6 +58,7 @@
                                 <tr class="bg-blue">
                                     <th style="width:30px;">#</th>
                                     <th>{{__('page.date')}}</th>
+                                    <th>{{__('page.company')}}</th>
                                     <th>{{__('page.category')}}</th>
                                     <th>{{__('page.description')}}</th>
                                     <th>{{__('page.amount')}}</th>
@@ -89,6 +90,7 @@
                                     <tr>
                                         <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
                                         <td class="date">{{ date('Y-m-d', strtotime($item->timestamp))}}</td>
+                                        <td class="company">@isset($item->company->name){{$item->company->name}}@endisset</td>
                                         <td class="category">@isset($item->category->name){{$item->category->name}}@endif</td>
                                         <td class="description">
                                             {{$item->description}}
@@ -131,7 +133,7 @@
                             </tbody>
                             <tfoot class="text-danger text-center">
                                 <tr>
-                                    <td colspan="2">{{__('page.total')}}</td>
+                                    <td colspan="3">{{__('page.total')}}</td>
                                     <td colspan="3">{{__('page.expenses')}} : -{{number_format($expenses)}}</td>
                                     <td colspan="3">{{__('page.incomes')}} : {{number_format($incomes)}}</td>
                                     <td colspan="3">{{__('page.profit')}} : {{number_format($incomes - $expenses)}}</td>
