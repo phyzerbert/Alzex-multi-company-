@@ -68,6 +68,7 @@ return [
     'user_overview' => 'User Overview',
     'category_overview' => 'Category Overview',
     'account_overview' => 'Account Overview',
+    'company_incoming' => 'Company Incoming',
 
     // ******** Transaction ********
     'select_type' => 'Select a type',

@@ -83,8 +83,8 @@ class CategoryController extends Controller
 
         Category::create([
             'name' => $request->get('name'),
-            'user_id' => $request->get('name'),
-            'comment' => Auth::user()->id,
+            'user_id' => Auth::user()->id,
+            'comment' => $request->get('comment'),
         ]);
         return back()->with('success', 'Created Successfully');
     }

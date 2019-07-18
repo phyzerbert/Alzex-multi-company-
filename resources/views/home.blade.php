@@ -91,6 +91,56 @@
                     </div>
                 </div>
             </div>
+           
+            <div class="card  @if(Auth::user()->hasRole('user')) d-none  @endif">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">{{__('page.company_incoming')}}</h5>
+                    <div class="header-elements">
+                        <div class="list-icons">
+                            <a class="list-icons-item" data-action="collapse"></a>
+                            <a class="list-icons-item" data-action="reload"></a>
+                            <a class="list-icons-item" data-action="remove"></a>
+                        </div>
+                    </div>
+                </div>
+                @php
+
+                    $now = Carbon::now();
+
+                    if($from != '' && $to != ''){
+                        $chart_start = Carbon::createFromFormat('Y-m-d', $from);
+                        $chart_end = Carbon::createFromFormat('Y-m-d', $to);
+                    }else{
+                        $chart_start = Carbon::now()->startOfMonth();
+                        $chart_end = Carbon::now()->endOfMonth();
+                    }
+
+                    $company_array = \App\Models\Company::pluck('name')->toArray();
+                    
+                    $key_array = $company_incoming = array();
+                    foreach ($companies as $item) {
+                        $company_incoming[$item->name] = array();
+                        for ($dt=$chart_start; $dt < $chart_end; $dt->addDay()) {
+                            $key = $dt->format('Y-m-d');
+                            $key1 = $dt->format('M/d');
+                            array_push($key_array, $key1);
+                            $daily_incoming = $item->transactions()->where('type', 2)->whereDate('timestamp', $key)->sum('amount');                            
+                            array_push($company_incoming[$item->name], $daily_incoming);
+                        }
+                    }
+
+                    // dump($company_array);
+
+                @endphp
+
+                <div class="card-body">
+                    <div class="chart-container">
+                        <div class="chart has-fixed-height" id="company_chart"></div>
+                    </div>
+                </div>
+            </div>
+            
+
             {{-- User Chart --}}
             <div class="card">
                 <div class="card-header header-elements-inline">
@@ -191,10 +241,14 @@
 <script src="{{asset('master/global_assets/js/plugins/daterangepicker/jquery.daterangepicker.min.js')}}"></script>
     <script src="{{asset('master/global_assets/js/plugins/visualization/echarts/echarts-en.js')}}"></script>
     <script>
+        var role = "{{Auth::user()->role->slug}}";
         var legend_array = {!! json_encode([__('page.expense'), __('page.incoming')]) !!};
         var expense = "{{__('page.expense')}}";
         var incoming = "{{__('page.incoming')}}";
         var balance = "{{__('page.balance')}}";
+        
+        var company_array = {!! json_encode($company_array) !!}
+       
         console.log(legend_array);
         var Chart_overview = function() {
 
@@ -213,19 +267,15 @@
 
                     area_basic.setOption({
 
-                        // Define colors
                         color: ['#2ec7c9','#b6a2de','#5ab1ef','#ffb980','#d87a80'],
 
-                        // Global text styles
                         textStyle: {
                             fontFamily: 'Roboto, Arial, Verdana, sans-serif',
                             fontSize: 13
                         },
 
-                        // Chart animation duration
                         animationDuration: 750,
 
-                        // Setup grid
                         grid: {
                             left: 0,
                             right: 40,
@@ -241,7 +291,6 @@
                             itemGap: 20
                         },
 
-                        // Add tooltip
                         tooltip: {
                             trigger: 'axis',
                             backgroundColor: 'rgba(0,0,0,0.75)',
@@ -252,7 +301,6 @@
                             }
                         },
 
-                        // Horizontal axis
                         xAxis: [{
                             type: 'category',
                             boundaryGap: false,
@@ -274,7 +322,6 @@
                             }
                         }],
 
-                        // Vertical axis
                         yAxis: [{
                             type: 'value',
                             axisLabel: {
@@ -298,7 +345,6 @@
                             }
                         }],
 
-                        // Add series
                         series: [
                             {
                                 name: expense,
@@ -363,6 +409,157 @@
             return {
                 init: function() {
                     dashboard_chart();
+                }
+            }
+        }();
+
+        var Company_overview = function() {
+            var company_chart = function() {
+                if (typeof echarts == 'undefined') {
+                    console.warn('Warning - echarts.min.js is not loaded.');
+                    return;
+                }
+
+                // Define elements
+                var area_basic_element = document.getElementById('company_chart');
+
+                if (area_basic_element) {
+
+                    var area_basic = echarts.init(area_basic_element);
+                    var company_incoming = {!! json_encode($company_incoming) !!}
+                    var company_series = [];
+                    for (let company_name in company_incoming) {
+                        const element = company_incoming[company_name]
+                        let company_data = {
+                                name: company_name,
+                                type: 'line',
+                                data: element,
+                                areaStyle: {
+                                    normal: {
+                                        opacity: 0.25
+                                    }
+                                },
+                                smooth: true,
+                                symbolSize: 7,
+                                itemStyle: {
+                                    normal: {
+                                        borderWidth: 2
+                                    }
+                                }
+                            }                       
+                        company_series.push(company_data)
+                    }
+
+                    area_basic.setOption({
+
+                        color: ['#2ec7c9','#b6a2de','#5ab1ef','#ffb980','#d87a80'],
+
+                        textStyle: {
+                            fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+                            fontSize: 13
+                        },
+
+                        animationDuration: 750,
+
+                        grid: {
+                            left: 0,
+                            right: 40,
+                            top: 35,
+                            bottom: 0,
+                            containLabel: true
+                        },
+
+                        
+                        legend: {
+                            data: {!! json_encode($company_array) !!},
+                            itemHeight: 8,
+                            itemGap: 20
+                        },
+
+                        tooltip: {
+                            trigger: 'axis',
+                            backgroundColor: 'rgba(0,0,0,0.75)',
+                            padding: [10, 15],
+                            textStyle: {
+                                fontSize: 13,
+                                fontFamily: 'Roboto, sans-serif'
+                            }
+                        },
+
+                        xAxis: [{
+                            type: 'category',
+                            boundaryGap: false,
+                            data: {!! json_encode($key_array) !!},
+                            axisLabel: {
+                                color: '#333'
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#999'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#eee',
+                                    type: 'dashed'
+                                }
+                            }
+                        }],
+
+                        yAxis: [{
+                            type: 'value',
+                            axisLabel: {
+                                color: '#333'
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#999'
+                                }
+                            },
+                            splitLine: {
+                                lineStyle: {
+                                    color: '#eee'
+                                }
+                            },
+                            splitArea: {
+                                show: true,
+                                areaStyle: {
+                                    color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.01)']
+                                }
+                            }
+                        }],
+
+                        series: company_series
+                        
+                    });
+                }
+
+                // Resize function
+                var triggerChartResize = function() {
+                    area_basic_element && area_basic.resize();
+                };
+
+                // On sidebar width change
+                $(document).on('click', '.sidebar-control', function() {
+                    setTimeout(function () {
+                        triggerChartResize();
+                    }, 0);
+                });
+
+                // On window resize
+                var resizeCharts;
+                window.onresize = function () {
+                    clearTimeout(resizeCharts);
+                    resizeCharts = setTimeout(function () {
+                        triggerChartResize();
+                    }, 200);
+                };
+            };
+
+            return {
+                init: function() {
+                    company_chart();
                 }
             }
         }();
@@ -928,6 +1125,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             Chart_overview.init();
+            Company_overview.init();
             Chart_user.init();
             Chart_category.init();
             Chart_account.init();
