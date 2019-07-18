@@ -28,6 +28,28 @@
         <div class="container content">
             <div class="card">
                 <div class="card-header">
+                    <form action="" method="POST" class="form-inline float-left" id="searchForm">
+                        @csrf
+                        @if (Auth::user()->hasRole('admin'))
+                            <select class="form-control form-control-sm mr-sm-2 mb-2" name="company_id" id="search_company">
+                                <option value="">{{__('page.select_company')}}</option>
+                                @foreach ($companies as $item)
+                                    <option value="{{$item->id}}" data-icon="wallet" @if($company_id == $item->id) selected @endif>{{$item->name}}</option>                                            
+                                @endforeach     
+                            </select>
+                            <select class="form-control form-control-sm mr-sm-2 mb-2" name="user_id" id="search_user">
+                                <option value="">{{__('page.select_user')}}</option>
+                                @foreach ($users as $item)
+                                    <option value="{{$item->id}}" data-icon="wallet" @if($user_id == $item->id) selected @endif>{{$item->name}}</option>                                            
+                                @endforeach     
+                            </select>
+                        @endif
+                        <input type="text" class="form-control form-control-sm mr-sm-2 mb-2" name="name" id="search_description" value="{{$name}}" placeholder="{{__('page.name')}}">
+                        <input type="text" class="form-control form-control-sm mr-sm-2 mb-2" name="comment" id="search_description" value="{{$comment}}" placeholder="{{__('page.comment')}}">
+                        
+                        <button type="submit" class="btn btn-sm btn-primary mb-2"><i class="icon-search4"></i>&nbsp;&nbsp;{{__('page.search')}}</button>
+                        <button type="button" class="btn btn-sm btn-info mb-2 ml-1" id="btn-reset"><i class="icon-eraser"></i>&nbsp;&nbsp;{{__('page.reset')}}</button>
+                    </form>
                     @if(Auth::user()->hasRole('user'))
                         <button type="button" class="btn btn-primary float-right" id="btn-add"><i class="icon-plus-circle2 mr-2"></i> {{__('page.add_new')}}</button>
                     @endif
@@ -49,7 +71,7 @@
                             <tbody>                                
                                 @foreach ($data as $item)
                                     <tr>
-                                        <td>{{ $loop->index + 1 }}</td>
+                                        <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
                                         <td class="name">{{$item->name}}</td>
                                         <td class="user">{{$item->user->name}}</td>
                                         <td class="comment">{{$item->comment}}</td>
@@ -62,7 +84,16 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+
                         </table>
+                        <div class="clearfix mt-1">
+                            <div class="float-left" style="margin: 0;">
+                                <p>{{__('page.total')}} <strong style="color: red">{{ $data->total() }}</strong> {{__('page.items')}}</p>
+                            </div>
+                            <div class="float-right" style="margin: 0;">
+                                {!! $data->appends(['name' => $name, 'comment' => $comment, 'user_id' => $user_id, 'company_id' => $company_id])->links() !!}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

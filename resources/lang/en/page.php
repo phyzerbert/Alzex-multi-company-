@@ -87,6 +87,7 @@ return [
 
     // ******** Category ********
 
+    'select_user' => 'Select an user',
     
     // ******** Account ********
     'group' => 'Group',
