@@ -40,7 +40,7 @@ hs.src = ('//s10.histats.com/js15_as.js');
 
         <ul class="navbar-nav">
             @if(Auth::user()->hasRole('user'))
-                <div class="nav-item">
+                <div class="nav-item px-3">
                     <span class="text-success" style="font-size:25px;line-height:46px;">@isset(Auth::user()->company->name){{Auth::user()->company->name}}@endisset</span>
                 </div>                
             @endif

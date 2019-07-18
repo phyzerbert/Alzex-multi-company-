@@ -28,9 +28,9 @@ Route::get('/profile', 'HomeController@profile')->name('profile');
 Route::get('/profile', 'UserController@profile')->name('profile');
 Route::post('/updateuser', 'UserController@updateuser')->name('updateuser');
 Route::get('/users/index', 'UserController@index')->name('users.index');
-Route::post('/user/create', 'UserController@create')->name('user.create');
-Route::post('/user/edit', 'UserController@edituser')->name('user.edit');
-Route::get('/user/delete/{id}', 'UserController@delete')->name('user.delete');
+Route::post('/user/create', 'UserController@create')->name('user.create')->middleware('role:admin');
+Route::post('/user/edit', 'UserController@edituser')->name('user.edit')->middleware('role:admin');
+Route::get('/user/delete/{id}', 'UserController@delete')->name('user.delete')->middleware('role:admin');
 
 Route::any('/category/index', 'CategoryController@index')->name('category.index');
 Route::post('/category/create', 'CategoryController@create')->name('category.create');

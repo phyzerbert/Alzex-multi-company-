@@ -72,7 +72,7 @@
 		if(notification != ''){
 
 			new PNotify({
-                title: 'Success',
+                title: "{{__('page.success')}}",
                 text: notification,
                 icon: 'icon-checkmark3',
                 addclass: 'bg-success border-success',
@@ -94,7 +94,7 @@
 				const element = errors[i];
 
 				new PNotify({
-					title: 'Error',
+					title: "{{__('page.error')}}",
 					text: element,
 					icon: 'icon-blocked',
                 	addclass: 'bg-danger border-danger',
