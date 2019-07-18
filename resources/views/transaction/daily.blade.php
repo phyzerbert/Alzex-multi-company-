@@ -340,6 +340,7 @@
         });
         $("#btn-reset").click(function(){
             $("#search_description").val('');
+            $("#search_company").val('');
             $("#search_category").val('');
             $("#search_account").val('');
             $("#search_type").val('');
