@@ -45,7 +45,7 @@
                                 @csrf
                                 <div class="form-group">
                                     <label>{{__('page.category')}}:</label>
-                                    <select data-placeholder="{{__('page.select_category')}}" name="category" class="form-control form-control-select2" data-fouc>
+                                    <select data-placeholder="{{__('page.select_category')}}" name="category" class="form-control form-control-select2" required data-fouc>
                                         <option label="{{__('page.select_category')}}"></option>
                                         @foreach ($categories as $category)
                                             <option value={{$category->id}}>{{$category->name}}</option>
@@ -58,7 +58,7 @@
 
                                 <div class="form-group">
                                     <label>{{__('page.withdraw_from')}}:</label>
-                                    <select data-placeholder="{{__('page.withdraw_from')}}" name="account" class="form-control form-control-select2-icons" data-fouc>
+                                    <select data-placeholder="{{__('page.withdraw_from')}}" name="account" class="form-control form-control-select2-icons" required data-fouc>
                                         @foreach ($accounts as $account)
                                             <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
                                         @endforeach                               
@@ -80,7 +80,7 @@
 
                                 <div class="form-group">
                                     <label>{{__('page.amount')}}:</label>
-                                    <input type="text" name="amount" class="form-control" placeholder="{{__('page.amount')}}">
+                                    <input type="text" name="amount" class="form-control" required placeholder="{{__('page.amount')}}">
                                     @error('amount')
                                         <span class="form-text text-success">{{ $message }}</span>
                                     @enderror
@@ -108,7 +108,7 @@
                                 @csrf
                                 <div class="form-group">
                                     <label>{{__('page.category')}}:</label>
-                                    <select data-placeholder="{{__('page.select_category')}}" name="category" class="form-control form-control-select2" data-fouc>
+                                    <select data-placeholder="{{__('page.select_category')}}" name="category" class="form-control form-control-select2" required data-fouc>
                                         <option label="{{__('page.select_category')}}"></option>
                                         @foreach ($categories as $category)
                                             <option value={{$category->id}}>{{$category->name}}</option>
@@ -121,7 +121,7 @@
 
                                 <div class="form-group">
                                     <label>{{__('page.target_account')}}:</label>
-                                    <select data-placeholder="{{__('page.target_account')}}" name="account" class="form-control form-control-select2-icons" data-fouc>
+                                    <select data-placeholder="{{__('page.target_account')}}" name="account" class="form-control form-control-select2-icons" required data-fouc>
                                         @foreach ($accounts as $account)
                                             <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
                                         @endforeach                             
@@ -168,7 +168,7 @@
                                 @csrf
                                 <div class="form-group">
                                     <label>{{__('page.category')}}:</label>
-                                    <select data-placeholder="{{__('page.select_category')}}" name="category" class="form-control form-control-select2" data-fouc>
+                                    <select data-placeholder="{{__('page.select_category')}}" name="category" class="form-control form-control-select2" required data-fouc>
                                         <option label="{{__('page.select_category')}}"></option>
                                         @foreach ($categories as $category)
                                             <option value={{$category->id}}>{{$category->name}}</option>
@@ -181,7 +181,7 @@
 
                                 <div class="form-group">
                                     <label>{{__('page.withdraw_from')}}:</label>
-                                    <select data-placeholder="{{__('page.withdraw_from')}}" name="account" class="form-control form-control-select2-icons" data-fouc>                                        
+                                    <select data-placeholder="{{__('page.withdraw_from')}}" name="account" class="form-control form-control-select2-icons" required data-fouc>                                        
                                         @foreach ($accounts as $account)
                                             <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
                                         @endforeach                               
@@ -193,7 +193,7 @@
 
                                 <div class="form-group">
                                     <label>{{__('page.target_account')}}:</label>
-                                    <select data-placeholder="{{__('page.target_account')}}" name="target" class="form-control form-control-select2-icons" data-fouc>
+                                    <select data-placeholder="{{__('page.target_account')}}" name="target" class="form-control form-control-select2-icons" required data-fouc>
                                         @foreach ($accounts as $account)
                                             <option value="{{$account->id}}" data-icon="wallet">{{$account->name}}</option>                                            
                                         @endforeach                              
@@ -215,7 +215,7 @@
 
                                 <div class="form-group">
                                     <label>{{__('page.amount')}}:</label>
-                                    <input type="text" name="amount" class="form-control" placeholder="{{__('page.amount')}}">
+                                    <input type="text" name="amount" class="form-control" required placeholder="{{__('page.amount')}}">
                                     @error('amount')
                                         <span class="form-text text-success">{{ $message }}</span>
                                     @enderror
