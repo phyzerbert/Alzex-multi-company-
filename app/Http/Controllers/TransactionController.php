@@ -45,6 +45,7 @@ class TransactionController extends Controller
             $company = $user->company;
             $company_id = $company->id;
             $accounts = $company->accounts;
+            $categories = $user->categories;
             $users = $company->users;
             $mod = $company->transactions();
             $mod1 = $company->transactions();
@@ -114,6 +115,7 @@ class TransactionController extends Controller
             $company_id = $company->id;
             $accounts = $company->accounts;
             $users = $company->users;
+            $accounts = $company->accounts;
             $mod = $company->transactions();
             $mod1 = $company->transactions();
             $last_transaction = $company->transactions()->orderBy('timestamp', 'desc')->first();
@@ -182,7 +184,7 @@ class TransactionController extends Controller
 
     public function create(Request $request){
         $user = Auth::user();
-        $categories = Category::all();  
+        $categories = $user->categories; 
         $company = $user->company;
         $accounts = $company->accounts;
         return view('transaction.create', compact('users', 'company', 'categories', 'accounts'));
