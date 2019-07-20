@@ -74,13 +74,20 @@
                                 @foreach ($data as $item)
                                 @php
                                     $timestamp = date('Y-m-d', strtotime($item->timestamp));
-                                   
-                                   $before_expenses = \App\Models\Transaction::where('type', 1)->where('timestamp', '<', $timestamp)->sum('amount');
-                                   
-                                    $before_incoming = \App\Models\Transaction::where('type', 2)->where('timestamp', '<', $timestamp)->sum('amount');
+                                    if($role == 'admin')
+                                        $before_expenses = \App\Models\Transaction::where('type', 1)->where('timestamp', '<', $timestamp)->sum('amount');                                   
+                                        $before_incoming = \App\Models\Transaction::where('type', 2)->where('timestamp', '<', $timestamp)->sum('amount');
 
-                                    $equal_expenses = \App\Models\Transaction::where('type', 1)->whereDate('timestamp', $timestamp)->where('created_at', '<=', $item->created_at)->sum('amount');
-                                    $equal_incoming = \App\Models\Transaction::where('type', 2)->whereDate('timestamp', $timestamp)->where('created_at', '<=',$item->created_at)->sum('amount');
+                                        $equal_expenses = \App\Models\Transaction::where('type', 1)->whereDate('timestamp', $timestamp)->where('created_at', '<=', $item->created_at)->sum('amount');
+                                        $equal_incoming = \App\Models\Transaction::where('type', 2)->whereDate('timestamp', $timestamp)->where('created_at', '<=',$item->created_at)->sum('amount');
+                                    }else if($role == 'user'){
+                                        $company = Auth::user()->company;
+                                        $before_expenses = $company->expenses()->where('timestamp', '<', $timestamp)->sum('amount');                                   
+                                        $before_incoming = $company->incomings()->where('timestamp', '<', $timestamp)->sum('amount');
+
+                                        $equal_expenses = $company->expenses()->whereDate('timestamp', $timestamp)->where('created_at', '<=', $item->created_at)->sum('amount');
+                                        $equal_incoming = $company->incomings()->whereDate('timestamp', $timestamp)->where('created_at', '<=',$item->created_at)->sum('amount');
+                                    }
                                     
                                     $total_expenses = $before_expenses + $equal_expenses;
                                     $total_incoming = $before_incoming + $equal_incoming;
