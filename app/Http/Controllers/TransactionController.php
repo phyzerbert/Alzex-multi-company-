@@ -64,8 +64,8 @@ class TransactionController extends Controller
         if ($request->get('description') != ""){
             $description = $request->get('description');
             // $users = User::where('description', 'LIKE', "%$description%")->pluck('id');
-            $mod = $mod->where('description', 'LIKE', "%$description%");
-            $mod1 = $mod1->where('description', 'LIKE', "%$description%");
+            $mod = $mod->where('description', 'LIKE', "%$description%")->orWhere('quantity', $description);
+            $mod1 = $mod1->where('description', 'LIKE', "%$description%")->orWhere('quantity', $description);
         }
         if ($request->get('category') != ""){
             $category = $request->get('category');
@@ -116,6 +116,7 @@ class TransactionController extends Controller
             $accounts = $company->accounts;
             $users = $company->users;
             $accounts = $company->accounts;
+            $categories = $user->categories;
             $mod = $company->transactions();
             $mod1 = $company->transactions();
             $last_transaction = $company->transactions()->orderBy('timestamp', 'desc')->first();
@@ -146,8 +147,8 @@ class TransactionController extends Controller
         
         if ($request->get('description') != ""){
             $description = $request->get('description');
-            $mod = $mod->where('description', 'LIKE', "%$description%");
-            $mod1 = $mod1->where('description', 'LIKE', "%$description%");
+            $mod = $mod->where('description', 'LIKE', "%$description%")->orWhere('amount', $description);
+            $mod1 = $mod1->where('description', 'LIKE', "%$description%")->orWhere('amount', $description);
         }
         if ($request->get('category') != ""){
             $category = $request->get('category');

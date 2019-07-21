@@ -74,7 +74,7 @@
                                 @foreach ($data as $item)
                                 @php
                                     $timestamp = date('Y-m-d', strtotime($item->timestamp));
-                                    if($role == 'admin')
+                                    if($role == 'admin'){
                                         $before_expenses = \App\Models\Transaction::where('type', 1)->where('timestamp', '<', $timestamp)->sum('amount');                                   
                                         $before_incoming = \App\Models\Transaction::where('type', 2)->where('timestamp', '<', $timestamp)->sum('amount');
 
