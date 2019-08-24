@@ -95,4 +95,9 @@ class CategoryController extends Controller
         return back()->with("success", "Deleted Successfully");
     }
 
+    public function get_company_category(Request $request){
+        $company = Company::find($request->id);
+        return response()->json($company->categories());
+    }
+
 }

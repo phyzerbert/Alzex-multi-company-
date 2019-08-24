@@ -19,3 +19,7 @@ table.table-hover tbody tr:hover{
       background-color: rgba(0, 0, 0, 0.3);
       z-index: 1100;
 }
+
+.filter-category .select2-selection--single {
+    padding: .3rem 0;
+}

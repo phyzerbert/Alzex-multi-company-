@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Category;
 
 class Company extends Model
 {
@@ -32,6 +33,11 @@ class Company extends Model
 
     public function users(){
         return $this->hasMany('App\User');
+    }
+
+    public function categories(){
+        $users = $this->users->pluck('id');
+        return Category::whereIn('user_id', $users)->get();
     }
     
 }

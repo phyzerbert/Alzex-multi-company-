@@ -74,11 +74,11 @@
                             </thead>
                             <tbody>                                
                                 @foreach ($data as $item)
-                                @php
-                                    $total_expenses = \App\Models\Transaction::where('type', 1)->where('timestamp', '<=', $item->timestamp)->sum('amount');
-                                    $total_incoming = \App\Models\Transaction::where('type', 2)->where('timestamp', '<=', $item->timestamp)->sum('amount');
-                                    $current_balance = $total_incoming - $total_expenses;
-                                @endphp
+                                    @php
+                                        $total_expenses = \App\Models\Transaction::where('type', 1)->where('timestamp', '<=', $item->timestamp)->sum('amount');
+                                        $total_incoming = \App\Models\Transaction::where('type', 2)->where('timestamp', '<=', $item->timestamp)->sum('amount');
+                                        $current_balance = $total_incoming - $total_expenses;
+                                    @endphp
                                     <tr>
                                         <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
                                         <td class="date">{{ date('Y-m-d', strtotime($item->timestamp))}}</td>
@@ -252,7 +252,6 @@
 <script src="{{asset('master/global_assets/js/plugins/notifications/jgrowl.min.js')}}"></script>
 <script>
     var FormLayouts = function() {
-
         var _componentSelect2 = function() {
             if (!$().select2) {
                 console.warn('Warning - select2.min.js is not loaded.');
@@ -425,6 +424,25 @@
                 $("#edit_form .btn-submit").trigger('click');
             };
         })
+
+        $("#search_company").change(function(){
+            let company_id = $(this).val();
+            $.ajax({
+                url : "{{route('get_company_category')}}",
+                type : 'GET',
+                data : {id : company_id},
+                dataType : "json",
+                success : function(data){
+                    $("#search_category").html(`<option value="" hidden>{{__('page.select_category')}}</option>`);
+                    for (let i = 0; i < data.length; i++) {
+                        const element = data[i];
+                        $("#search_category").append(`
+                            <option value="${element.id}">${element.name}</option>
+                        `);
+                    }
+                }
+            })
+        });
     });
 </script>
 @endsection

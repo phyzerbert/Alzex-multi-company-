@@ -15,18 +15,22 @@
         </select>
     @endif
     <input type="text" class="form-control form-control-sm mr-sm-2 mb-2" name="description" id="search_description" value="{{$description}}" placeholder="{{__('page.description')}}">
+    
     <select class="form-control form-control-sm mr-sm-2 mb-2" name="account" id="search_account">
         <option value="" hidden>{{__('page.select_account')}}</option>
         @foreach ($accounts as $item)
             <option value="{{$item->id}}" data-icon="wallet" @if($account == $item->id) selected @endif>{{$item->name}}</option>                                            
         @endforeach     
     </select>
-    <select class="form-control form-control-sm mr-sm-2 mb-2" name="category" id="search_category">
-        <option value="">{{__('page.select_category')}}</option>
-        @foreach ($categories as $item)
-            <option value="{{$item->id}}" @if ($category == $item->id) selected @endif>{{$item->name}}</option>
-        @endforeach
-    </select>
+
+    <div class="filter-category mb-2 mr-2" style="width:230px;">
+        <select class="form-control form-control-sm form-control-select2 mr-sm-2 mb-2" name="category" id="search_category">
+            <option value="" hidden>{{__('page.select_category')}}</option>
+            @foreach ($categories as $item)
+                <option value="{{$item->id}}" @if ($category == $item->id) selected @endif>{{$item->name}}</option>
+            @endforeach
+        </select>
+    </div>
     <input type="text" class="form-control form-control-sm mr-sm-2 mb-2" name="period" id="period" autocomplete="off" value="{{$period}}" placeholder="{{__('page.timestamp')}}" style="max-width:170px;">
     <button type="submit" class="btn btn-sm btn-primary mb-2"><i class="icon-search4"></i>&nbsp;&nbsp;{{__('page.search')}}</button>
     <button type="button" class="btn btn-sm btn-info mb-2 ml-1" id="btn-reset"><i class="icon-eraser"></i>&nbsp;&nbsp;{{__('page.reset')}}</button>

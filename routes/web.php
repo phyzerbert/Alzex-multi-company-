@@ -36,6 +36,7 @@ Route::any('/category/index', 'CategoryController@index')->name('category.index'
 Route::post('/category/create', 'CategoryController@create')->name('category.create');
 Route::post('/category/edit', 'CategoryController@edit')->name('category.edit');
 Route::get('/category/delete/{id}', 'CategoryController@delete')->name('category.delete');
+Route::get('/get_company_category', 'CategoryController@get_company_category')->name('get_company_category');
 
 Route::get('/company/index', 'CompanyController@index')->name('company.index');
 Route::post('/company/create', 'CompanyController@create')->name('company.create');
