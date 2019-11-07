@@ -38,7 +38,6 @@ class TransactionController extends Controller
         $accounts = Account::all();
         
         $mod = new Transaction();
-        $mod1 = new Transaction();
         $category = $company_id = $account = $description = $type = $period = '';
 
         if($user->hasRole('user')){
@@ -48,34 +47,30 @@ class TransactionController extends Controller
             $categories = $user->categories;
             $users = $company->users;
             $mod = $company->transactions();
-            $mod1 = $company->transactions();
         }
 
         if ($request->get('type') != ""){
             $type = $request->get('type');
             $mod = $mod->where('type', $type);
-            $mod1 = $mod1->where('type', $type);
         }
         if ($request->get('company_id') != ""){
             $company_id = $request->get('company_id');
             $mod = $mod->where('company_id', $company_id);
-            $mod1 = $mod1->where('company_id', $company_id);
+            $company = Company::find($company_id);
+            $categories = $company->categories();
         }
         if ($request->get('description') != ""){
             $description = $request->get('description');
             // $users = User::where('description', 'LIKE', "%$description%")->pluck('id');
             $mod = $mod->where('description', 'LIKE', "%$description%")->orWhere('quantity', $description);
-            $mod1 = $mod1->where('description', 'LIKE', "%$description%")->orWhere('quantity', $description);
         }
         if ($request->get('category') != ""){
             $category = $request->get('category');
             $mod = $mod->where('category_id', $category);
-            $mod1 = $mod1->where('category_id', $category);
         }
         if ($request->get('account') != ""){
             $account = $request->get('account');
             $mod = $mod->where('from', $account)->orWhere('to', $account);
-            $mod1 = $mod1->where('from', $account)->orWhere('to', $account);
         }
         if ($request->get('period') != ""){   
             $period = $request->get('period');
@@ -83,17 +78,16 @@ class TransactionController extends Controller
             $to = substr($period, 14, 10)." 23:59:59";
             if($from == $to){
                 $mod = $mod->whereDate('timestamp', $to);
-                $mod1 = $mod1->whereDate('timestamp', $to);
             }else{                
                 $mod = $mod->whereBetween('timestamp', [$from, $to]);
-                $mod1 = $mod1->whereBetween('timestamp', [$from, $to]);
             } 
         }
 
         $pagesize = $request->session()->get('pagesize');
-        $data = $mod->orderBy('timestamp', 'desc')->paginate($pagesize);
-        $expenses = $mod->where('type', 1)->sum('amount');
-        $incomes = $mod1->where('type', 2)->sum('amount');
+        $data = $mod->orderBy('timestamp', 'desc')->paginate($pagesize);        
+        $collection = $mod->get();
+        $expenses = $collection->where('type', 1)->sum('amount');
+        $incomes= $collection->where('type', 2)->sum('amount');
         return view('transaction.index', compact('data', 'companies', 'expenses', 'incomes', 'categories', 'accounts', 'users', 'type', 'company_id', 'description', 'category', 'account', 'period', 'pagesize'));
     }
 
@@ -137,6 +131,8 @@ class TransactionController extends Controller
             $company_id = $request->get('company_id');
             $mod = $mod->where('company_id', $company_id);
             $mod1 = $mod1->where('company_id', $company_id);
+            $company = Company::find($company_id);
+            $categories = $company->categories();
         }
         // if ($request->get('user') != ""){
         //     $user = $request->get('user');

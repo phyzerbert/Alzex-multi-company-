@@ -8,7 +8,11 @@
                     $accounts = \App\Models\Account::all();
                     if (Auth::user()->hasRole('user')) {
                         $accounts = Auth::user()->company->accounts;
-                        $balance = Auth::user()->company->accounts()->sum('balance');
+                        $balance = Auth::user()->company->accounts->sum(function($account) {
+                                                    $account_expense = $account->expenses()->sum('amount');
+                                                    $account_incoming = $account->incomings()->sum('amount');
+                                                    return $account_incoming - $account_expense;
+                                                });
                     }
                 @endphp
                 <div class="dropdown-header dropdown-header-highlight">{{__('page.total')}}:    {{number_format($balance)}}</div>

@@ -477,7 +477,26 @@
             if(e.keyCode == 13){
                 $("#edit_form .btn-submit").trigger('click');
             };
-        })
+        });
+
+        $("#search_company").change(function(){
+            let company_id = $(this).val();
+            $.ajax({
+                url : "{{route('get_company_category')}}",
+                type : 'GET',
+                data : {id : company_id},
+                dataType : "json",
+                success : function(data){
+                    $("#search_category").html(`<option value="" hidden>{{__('page.select_category')}}</option>`);
+                    for (let i = 0; i < data.length; i++) {
+                        const element = data[i];
+                        $("#search_category").append(`
+                            <option value="${element.id}">${element.name}</option>
+                        `);
+                    }
+                }
+            })
+        });
     });
 </script>
 @endsection
